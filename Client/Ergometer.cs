@@ -17,22 +17,22 @@ namespace Client
         /// <summary>
         ///   Get the log of ergometer values.
         /// </summary>
-        public JObject Log { get; }
+        public JObject Log { get; private set; }
 
         /// <summary>
         ///   Get the reported heart rate.
         /// </summary>
-        public int HR { get; }
+        public int HR { get; private set; }
 
         /// <summary>
         ///   Get the reported cycling rate.
         /// </summary>
-        public int RPM { get; }
+        public int RPM { get; private set; }
 
         /// <summary>
         ///   Get the reported actual power.
         /// </summary>
-        public int ActualPower { get; }
+        public int ActualPower { get; private set; }
 
         /// <summary>
         ///   Get the reported requested power.
