@@ -19,15 +19,29 @@ namespace Server
         {
             const int port = 420;
             Console.CancelKeyPress += OnCancel;
-            var listener = new TcpListener(IPAddress.Any, port);
-            listener.Start();
-            Console.WriteLine("Server started\nTime: {0:R}\nEndpoint: {1}\n", DateTime.Now,
-                (IPEndPoint) listener.LocalEndpoint);
-            while (true)
+            try
             {
-                var c = listener.AcceptTcpClient();
-                var client = new Client(c);
-                new Thread(() => client.Accept()).Start();
+                var listener = new TcpListener(IPAddress.Any, port);
+                listener.Start();
+                Console.WriteLine("Server started\nTime: {0:R}\nEndpoint: {1}\n", DateTime.Now,
+                    (IPEndPoint) listener.LocalEndpoint);
+                while (true)
+                {
+                    var c = listener.AcceptTcpClient();
+                    var client = new Client(c);
+                    new Thread(() => client.Accept()).Start();
+                }
+            }
+            catch (SocketException e)
+            {
+                if (e.ErrorCode == 10048)
+                {
+                    Console.WriteLine("Port in use ({0}/tcp).", port);
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
 
