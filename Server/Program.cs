@@ -217,8 +217,8 @@ namespace Server
 
         internal enum Error
         {
-            LogNotFound,
-            InvalidLog
+            InvalidLog,
+            LogNotFound
         }
 
         internal enum Request
