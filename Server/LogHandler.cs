@@ -76,26 +76,27 @@ namespace Server
         }
 
         /// <summary>
-        /// Copies the file to the given stream.
+        /// Get the stream of a log.
         /// </summary>
-        /// <param name="logId">The log's unique identifier.</param>
-        /// <param name="stream">The stream to copy the file to.</param>
-        /// <returns>Returns true if the file was loaded and copied correctly.</returns>
-        public static bool CopyToStream(string logId, Stream stream)
+        /// <param name="logID">The log's unique identifier.</param>
+        /// <returns>Returns the stream of the log, or null if it doesn't exist.</returns>
+        public static FileStream GetLogStream(string logID)
         {
             try
             {
-                File.OpenRead(Path.Combine(AppDataDir, logId)).CopyTo(stream);
-                stream.Flush();
-                return true;
-            }
-            catch (FileNotFoundException)
-            {
-                return false;
+                return File.OpenRead(Path.Combine(AppDataDir, logID));
             }
             catch (ArgumentException)
             {
-                return false;
+                return null;
+            }
+            catch (FileNotFoundException)
+            {
+                return null;
+            }
+            catch (PathTooLongException)
+            {
+                return null;
             }
         }
 

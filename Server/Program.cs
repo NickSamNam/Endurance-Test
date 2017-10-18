@@ -88,9 +88,9 @@ namespace Server
             if (!_client.Connected) return;
             try
             {
-                var sizeBuffer = new byte[4];
+                var sizeBuffer = new byte[8];
                 _stream.Read(sizeBuffer, 0, sizeBuffer.Length);
-                var messageLength = BitConverter.ToInt32(sizeBuffer, 0);
+                var messageLength = BitConverter.ToUInt64(sizeBuffer, 0);
                 var messageBuffer = new byte[_client.ReceiveBufferSize];
                 var messageBuilder = new StringBuilder();
                 var requestType = (Request) _stream.ReadByte();
@@ -102,16 +102,27 @@ namespace Server
                 switch (requestType)
                 {
                     case Request.Get:
-                        var read = 0;
+                        var read = 0uL;
                         do
                         {
-                            read += _stream.Read(messageBuffer, 0, messageBuffer.Length);
+                            read += (uint) _stream.Read(messageBuffer, 0, messageBuffer.Length);
                             messageBuilder.Append(Encoding.ASCII.GetString(messageBuffer));
                         } while (read < messageLength);
 
                         var request = JObject.Parse(messageBuilder.ToString());
-                        if (!LogHandler.CopyToStream(request["LogID"].ToObject<string>(), _stream))
-                            Send(ErrorAsJSON(Error.LogNotFound));
+                        {
+                            using (var fs = LogHandler.GetLogStream(request["LogID"].ToObject<string>()))
+                            {
+                                if (fs == null)
+                                {
+                                    Send(ErrorAsJSON(Error.LogNotFound));
+                                    break;
+                                }
+                                var rl = BitConverter.GetBytes(fs.Length);
+                                _stream.Write(rl, 0, rl.Length);
+                                fs.CopyTo(_stream);
+                            }
+                        }
                         break;
                     case Request.Put:
                         var logID = LogHandler.SaveLog(messageBuilder.ToString());
@@ -148,7 +159,7 @@ namespace Server
         private void Send(string message)
         {
             var msg = Encoding.ASCII.GetBytes(message);
-            var prefix = BitConverter.GetBytes(msg.Length);
+            var prefix = BitConverter.GetBytes((ulong) msg.Length);
             var buffer = new byte[prefix.Length + msg.Length];
             Buffer.BlockCopy(prefix, 0, buffer, 0, prefix.Length);
             Buffer.BlockCopy(msg, 0, buffer, prefix.Length, msg.Length);
