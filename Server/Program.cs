@@ -23,7 +23,6 @@ namespace Server
             listener.Start();
             Console.WriteLine("Server started\nTime: {0:R}\nEndpoint: {1}\n", DateTime.Now,
                 (IPEndPoint) listener.LocalEndpoint);
-            LogHandler.SaveLog("");
             while (true)
             {
                 var c = listener.AcceptTcpClient();

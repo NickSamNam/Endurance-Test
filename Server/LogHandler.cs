@@ -33,22 +33,47 @@ namespace Server
             return logID;
         }
 
-//        public static string CopyFromStream(Stream stream)
-//        {
-//            var schema = JSchema.Parse(JsonSchemaLog);
-//            using (var s = new StreamReader(stream))
-//            using (var reader = new JSchemaValidatingReader(new JsonTextReader(s)))
-//            {
-//                // assign schema and setup event handler
-//                reader.Schema = schema;
-//                reader.ValidationEventHandler += (sender, args) => throw new JsonException();
-//
-//                // bigdata.json will be validated without loading the entire document into memory
-//                while (reader.Read())
-//                {
-//                }
-//            }
-//        }
+        // TODO test with networkstream
+        public static string CopyFromStream(Stream stream, int messageLength)
+        {
+            var logID = "";
+            var path = "";
+            do
+            {
+                logID = Guid.NewGuid().ToString("D");
+                path = Path.Combine(AppDataDir, logID);
+            } while (File.Exists(path));
+
+            var schema = JSchema.Parse(JsonSchemaLog);
+
+            try
+            {
+                using (var s = new StreamReader(stream))
+                using (var reader = new JSchemaValidatingReader(new JsonTextReader(s)))
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                using (var writer = new StreamWriter(fs))
+                {
+                    reader.Schema = schema;
+                    reader.ValidationEventHandler += (sender, args) => throw new JsonException();
+
+                    while (stream.Position < messageLength && reader.Read())
+                    {
+                        if (reader.TokenType == JsonToken.StartObject)
+                        {
+                            // TODO fix read as single chunk
+                            writer.WriteLine(JToken.ReadFrom(reader).ToString());
+                        }
+                    }
+                }
+            }
+            catch (JsonException)
+            {
+                File.Delete(path);
+                throw;
+            }
+
+            return logID;
+        }
 
         /// <summary>
         /// Copies the file to the given stream.
