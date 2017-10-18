@@ -10,6 +10,8 @@ namespace Server
 {
     public static class LogHandler
     {
+        private static readonly JSchema Schema = JSchema.Parse(JsonSchemaLog);
+
         private static readonly string AppDataDir = Path.Combine(Environment.GetFolderPath(
             Environment.SpecialFolder.LocalApplicationData,
             Environment.SpecialFolderOption.DoNotVerify), Assembly.GetExecutingAssembly().GetName().Name);
@@ -34,34 +36,86 @@ namespace Server
         }
 
         // TODO test with networkstream
-        public static string CopyFromStream(Stream stream, int messageLength)
+        public static string CopyFromStream(Stream stream, ulong messageLength)
         {
-            var logID = "";
-            var path = "";
+            string logID;
+            string path;
             do
             {
                 logID = Guid.NewGuid().ToString("D");
                 path = Path.Combine(AppDataDir, logID);
             } while (File.Exists(path));
 
-            var schema = JSchema.Parse(JsonSchemaLog);
-
             try
             {
                 using (var s = new StreamReader(stream))
                 using (var reader = new JSchemaValidatingReader(new JsonTextReader(s)))
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-                using (var writer = new StreamWriter(fs))
+                using (var w = new StreamWriter(fs))
+                using (var writer = new JsonTextWriter(w))
                 {
-                    reader.Schema = schema;
+                    reader.Schema = Schema;
                     reader.ValidationEventHandler += (sender, args) => throw new JsonException();
 
-                    while (stream.Position < messageLength && reader.Read())
+                    while ((uint) stream.Position < messageLength && reader.Read())
                     {
-                        if (reader.TokenType == JsonToken.StartObject)
+                        switch (reader.TokenType)
                         {
-                            // TODO fix read as single chunk
-                            writer.WriteLine(JToken.ReadFrom(reader).ToString());
+                            case JsonToken.None:
+                                break;
+                            case JsonToken.StartObject:
+                                writer.WriteStartObject();
+                                break;
+                            case JsonToken.StartArray:
+                                writer.WriteStartArray();
+                                break;
+                            case JsonToken.StartConstructor:
+                                writer.WriteStartConstructor(reader.Value.ToString());
+                                break;
+                            case JsonToken.PropertyName:
+                                writer.WritePropertyName(reader.Value.ToString());
+                                break;
+                            case JsonToken.Comment:
+                                writer.WriteComment(reader.Value.ToString());
+                                break;
+                            case JsonToken.Raw:
+                                writer.WriteRaw(reader.Value.ToString());
+                                break;
+                            case JsonToken.Integer:
+                                writer.WriteValue(reader.Value);
+                                break;
+                            case JsonToken.Float:
+                                writer.WriteValue(reader.Value);
+                                break;
+                            case JsonToken.String:
+                                writer.WriteValue(reader.Value);
+                                break;
+                            case JsonToken.Boolean:
+                                writer.WriteValue(reader.Value);
+                                break;
+                            case JsonToken.Null:
+                                writer.WriteNull();
+                                break;
+                            case JsonToken.Undefined:
+                                writer.WriteUndefined();
+                                break;
+                            case JsonToken.EndObject:
+                                writer.WriteEndObject();
+                                break;
+                            case JsonToken.EndArray:
+                                writer.WriteEndArray();
+                                break;
+                            case JsonToken.EndConstructor:
+                                writer.WriteEndConstructor();
+                                break;
+                            case JsonToken.Date:
+                                writer.WriteValue(reader.Value);
+                                break;
+                            case JsonToken.Bytes:
+                                writer.WriteValue(reader.Value);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
                         }
                     }
                 }

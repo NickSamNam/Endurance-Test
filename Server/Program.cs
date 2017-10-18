@@ -17,6 +17,9 @@ namespace Server
     {
         static void Main(string[] args)
         {
+            var fs = new FileStream("C:\\Users\\snick\\AppData\\Local\\Endurance Test Log Server\\test", FileMode.Open);
+            LogHandler.CopyFromStream(fs, (ulong) fs.Length);
+            return;
             const int port = 420;
             Console.CancelKeyPress += OnCancel;
             var listener = new TcpListener(IPAddress.Any, port);
