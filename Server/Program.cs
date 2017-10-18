@@ -17,9 +17,6 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            var fs = new FileStream("C:\\Users\\snick\\AppData\\Local\\Endurance Test Log Server\\test", FileMode.Open);
-            LogHandler.CopyFromStream(fs, (ulong) fs.Length);
-            return;
             const int port = 420;
             Console.CancelKeyPress += OnCancel;
             var listener = new TcpListener(IPAddress.Any, port);
@@ -113,23 +110,30 @@ namespace Server
                         } while (read < messageLength);
 
                         var request = JObject.Parse(messageBuilder.ToString());
+                    {
+                        using (var fs = LogHandler.GetLogStream(request["LogID"].ToObject<string>()))
                         {
-                            using (var fs = LogHandler.GetLogStream(request["LogID"].ToObject<string>()))
+                            if (fs == null)
                             {
-                                if (fs == null)
-                                {
-                                    Send(ErrorAsJSON(Error.LogNotFound));
-                                    break;
-                                }
-                                var rl = BitConverter.GetBytes(fs.Length);
-                                _stream.Write(rl, 0, rl.Length);
-                                fs.CopyTo(_stream);
+                                Send(ErrorAsJSON(Error.LogNotFound));
+                                break;
                             }
+                            var rl = BitConverter.GetBytes(fs.Length);
+                            _stream.Write(rl, 0, rl.Length);
+                            fs.CopyTo(_stream);
                         }
+                    }
                         break;
                     case Request.Put:
-                        var logID = LogHandler.SaveLog(messageBuilder.ToString());
-                        Send(logID);
+                        _stream.SetLength((long) messageLength);
+                        try
+                        {
+                            Send(LogHandler.PutFromStream(_stream));
+                        }
+                        catch (JsonException)
+                        {
+                            Send(ErrorAsJSON(Error.InvalidLog));
+                        }
                         break;
                 }
             }
@@ -199,7 +203,8 @@ namespace Server
 
         internal enum Error
         {
-            LogNotFound
+            LogNotFound,
+            InvalidLog
         }
 
         internal enum Request

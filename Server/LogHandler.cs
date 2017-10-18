@@ -10,33 +10,24 @@ namespace Server
 {
     public static class LogHandler
     {
+        /// <summary>
+        /// The JASON Schema to use while checking an incoming log.
+        /// </summary>
         private static readonly JSchema Schema = JSchema.Parse(JsonSchemaLog);
 
+        /// <summary>
+        /// The App data local directory for this application.
+        /// </summary>
         private static readonly string AppDataDir = Path.Combine(Environment.GetFolderPath(
             Environment.SpecialFolder.LocalApplicationData,
             Environment.SpecialFolderOption.DoNotVerify), Assembly.GetExecutingAssembly().GetName().Name);
-
+        
         /// <summary>
-        /// Save a log to the appropriate place in the filesystem.
+        /// Save a log from a stream to the filesystem, also validates the data.
         /// </summary>
-        /// <param name="log">The log to save.</param>
+        /// <param name="stream">The stream where the log is found.</param>
         /// <returns>Returns the log's unique id to use when requesting it from storage.</returns>
-        public static string SaveLog(string log)
-        {
-            Directory.CreateDirectory(AppDataDir);
-            var logID = "";
-            var path = "";
-            do
-            {
-                logID = Guid.NewGuid().ToString("D");
-                path = Path.Combine(AppDataDir, logID);
-            } while (File.Exists(path));
-            File.WriteAllText(path, log);
-            return logID;
-        }
-
-        // TODO test with networkstream
-        public static string CopyFromStream(Stream stream, ulong messageLength)
+        public static string PutFromStream(Stream stream)
         {
             string logID;
             string path;
@@ -57,7 +48,7 @@ namespace Server
                     reader.Schema = Schema;
                     reader.ValidationEventHandler += (sender, args) => throw new JsonException();
 
-                    while ((uint) stream.Position < messageLength && reader.Read())
+                    while ((uint) stream.Position < stream.Length && reader.Read())
                     {
                         switch (reader.TokenType)
                         {
