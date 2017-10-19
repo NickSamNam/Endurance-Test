@@ -48,7 +48,7 @@ namespace Server
                     reader.Schema = Schema;
                     reader.ValidationEventHandler += (sender, args) => throw new JsonException();
 
-                    while ((uint) stream.Position < stream.Length && reader.Read())
+                    while (reader.Read())
                     {
                         switch (reader.TokenType)
                         {

@@ -139,9 +139,10 @@ namespace Server
                     }
                         break;
                     case Request.Put:
-                        _stream.SetLength((long) messageLength);
                         try
                         {
+                            const int readTimeout = 1000;
+                            _stream.ReadTimeout = readTimeout;
                             Send(LogHandler.PutFromStream(_stream));
                         }
                         catch (JsonException)
