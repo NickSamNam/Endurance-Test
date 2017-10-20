@@ -1,17 +1,24 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
+using System.IO.Ports;
+using System.Diagnostics;
 
 namespace Client
 {
     public class Ergometer
     {
+        private readonly SerialPort _serialPort;
+        private bool _cmMode;
+
         /// <summary>
         ///   Initializes a new instance of the <see cref="Ergometer" /> class.
         /// </summary>
         /// <param name="port">The serial port on which to communicate with the ergometer.</param>
-        public Ergometer(int port)
+        public Ergometer(string port)
         {
-            // TODO create body
+            _serialPort = new SerialPort(port, 9600, Parity.None);
+            _serialPort.Open();
+            _serialPort.DataReceived += OnReceive;
         }
 
         /// <summary>
@@ -59,7 +66,72 @@ namespace Client
         /// </summary>
         public void Reset()
         {
-            // TODO create body
+            _cmMode = false;
+            const string _out = "RS";
+            _serialPort.WriteLine(_out);
+        }
+
+        /// <summary>
+        ///   Turns on Command Mode
+        /// </summary>
+        public void CmMode()
+        {
+            const string _out = "CM";
+            _serialPort.WriteLine(_out);
+        }
+
+        /// <summary>
+        ///   On data received.
+        /// </summary>
+        private void OnReceive(object sender, SerialDataReceivedEventArgs args)
+        {
+            try
+            {
+                var serialPort = (SerialPort)sender;
+                var data = serialPort.ReadLine();
+
+                switch (data.Trim())
+                {
+                    case "ERROR":
+                        Reset();
+                        return;
+                    case "ACK":
+                        CmMode();
+                        return;
+                    case "RUN":
+                        _cmMode = true;
+                        return;
+                }
+
+                try
+                {
+                    var dataSt = data.Split('\t');
+
+                    if (dataSt.Length != 8)
+                        return;
+
+                    HR  = int.Parse(dataSt[0]);
+                    RPM = int.Parse(dataSt[1]);
+                    Speed = decimal.Parse(dataSt[2]) / 10;
+                    Distance = decimal.Parse(dataSt[3]) / 10;
+                    RequestedPower = int.Parse(dataSt[4]);
+                    Time = TimeSpan.FromSeconds(int.Parse(dataSt[6].Split(':')[0]) * 60 + int.Parse(dataSt[6].Split(':')[1]));
+                    ActualPower = int.Parse(dataSt[7]);
+
+                }
+                catch (ArgumentNullException ane)
+                {
+                    Debug.WriteLine(ane.StackTrace);
+                }
+                catch (FormatException fe)
+                { 
+                    Debug.WriteLine(fe.StackTrace);
+                }
+            }
+            catch (System.IO.IOException ioe)
+            {
+                Debug.WriteLine(ioe.StackTrace);
+            }
         }
 
         /// <summary>
@@ -67,7 +139,8 @@ namespace Client
         /// </summary>
         public void Close()
         {
-            // TODO create body
+            _serialPort.Close();
+            _serialPort.Dispose();
         }
     }
 }
