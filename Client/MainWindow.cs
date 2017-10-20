@@ -16,6 +16,7 @@ namespace Client
 
         private void MainWindow_Load(object sender, System.EventArgs e)
         {
+            pn_patient.Visible = false;
             pn_test.Visible = false;
             foreach (string port in SerialPort.GetPortNames())
             {
@@ -30,8 +31,8 @@ namespace Client
         {
             try
             {
-                //_ergometer = new Ergometer(cb_ports.SelectedItem.ToString());
-                pn_test.Visible = true;
+                _ergometer = new Ergometer(cb_ports.SelectedItem.ToString());
+                pn_patient.Visible = true;
                 pn_connect.Visible = false;
             }
             catch (Exception ex) {
@@ -44,7 +45,20 @@ namespace Client
         /// </summary>
         private void btn_start_Click(object sender, EventArgs e)
         {
-            var result = new EnduranceTest(_ergometer, new Patient("Test", "Test", new DateTime())).StartAsync(); // TODO: remove Patient
+            pn_patient.Visible = false;
+            pn_test.Visible = false;
+
+            StartTest(new Patient(
+                    tb_first_name.Text,
+                    tb_last_name.Text,
+                    dtp_birthdate.MinDate,
+                    rb_gender_male.Checked
+                )
+            );
+        }
+
+        private async void StartTest(Patient patient) {
+            await new EnduranceTest(_ergometer, patient).StartAsync();
         }
     }
 }

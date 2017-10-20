@@ -44,7 +44,15 @@ namespace Client
         /// <summary>
         ///   Get the reported requested power.
         /// </summary>
-        public int RequestedPower { get; set; }
+        public int RequestedPower
+        {
+            get => RequestedPower;
+            set
+            {
+                var _out = $"PW {value}";
+                _serialPort.WriteLine(_out);
+            }
+        }
 
         /// <summary>
         ///   Get the reported speed.
