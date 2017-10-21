@@ -27,7 +27,7 @@ namespace Client
         /// <summary>
         ///   Gets the age of the patient at the current point in time.
         /// </summary>
-        public int Age => (DateTime.Now - Birthdate).Days % 365;
+        public int Age => (int) ((DateTime.Now - Birthdate).Days / 365.25);
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="Patient" /> class.
