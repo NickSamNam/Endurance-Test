@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Timer = System.Timers.Timer;
 using System.Timers;
@@ -16,16 +17,17 @@ namespace Client
 
         public TestState TestState { get; set; } = TestState.No;
 
-        private static readonly double[][] _ageValues = {
-            new double[]{15, 1.1,  210},
-            new double[]{25, 1.0,  200},
-            new double[]{35, .87,  190},
-            new double[]{40, .83,  180},
-            new double[]{45, .78,  170},
-            new double[]{50, .75,  160},
-            new double[]{55, .71,  150},
-            new double[]{60, .68,  150},
-            new double[]{65, .65,  150}
+        private static readonly double[][] _ageValues =
+        {
+            new double[] {15, 1.1, 210},
+            new double[] {25, 1.0, 200},
+            new double[] {35, .87, 190},
+            new double[] {40, .83, 180},
+            new double[] {45, .78, 170},
+            new double[] {50, .75, 160},
+            new double[] {55, .71, 150},
+            new double[] {60, .68, 150},
+            new double[] {65, .65, 150}
         };
 
         private double[] _values;
@@ -49,9 +51,10 @@ namespace Client
         /// <returns>Returns the test results.</returns>
         public async Task<JObject> StartAsync()
         {
-            await new Task(() =>
+            var results = await new Task<Tuple<int, int>>(() =>
+            {
                 _hRs = new List<int>();
-                TestState = TestState.WARMUP;
+                TestState = TestState.Warmup;
 
                 _ergometer.RequestedPower = 50;
 
@@ -61,38 +64,43 @@ namespace Client
                 stateTimer.Start();
 
                 double[] prevValue = _ageValues[0];
-                foreach (double[] values in _ageValues) {
+                foreach (double[] values in _ageValues)
+                {
                     if (values[0] > _patient.Age)
                         _values = prevValue;
                     prevValue = values;
                 }
 
-                if (_values == null) {
+                if (_values == null)
+                {
                     _values = _ageValues[_ageValues.Length - 1];
                 }
 
                 int[] hRs = new int[8];
                 var testTimer = new Timer();
                 testTimer.Interval = 1500;
-                
-                while (TestState != TestState.NO)
+
+                int power = 0;
+
+                while (TestState != TestState.No)
                 {
                     switch (TestState)
                     {
-                        case TestState.WARMUP:
+                        case TestState.Warmup:
                             testTimer.Start();
-                            testTimer.Elapsed += new ElapsedEventHandler(WarmupTimerElapsed);         
+                            testTimer.Elapsed += WarmupTimerElapsed;
                             break;
-                        case TestState.TEST:
+                        case TestState.Test:
                             testTimer.Stop();
                             testTimer = new Timer();
                             testTimer.Interval = 1500;
+                            power = _ergometer.RequestedPower;
                             break;
-                        case TestState.ENDTEST:
+                        case TestState.EndTest:
                             testTimer.Start();
-                            testTimer.Elapsed += new ElapsedEventHandler(EndTestTimerElapsed);
+                            testTimer.Elapsed += EndTestTimerElapsed;
                             break;
-                        case TestState.COOLDOWN:
+                        case TestState.Cooldown:
                             testTimer.Stop();
                             _ergometer.RequestedPower = 50;
                             break;
@@ -107,19 +115,15 @@ namespace Client
                     {
                         avgHr += hr;
                     }
-                    avgHr /= _hRs.Count;
+                    return Tuple.Create(Convert.ToInt32(avgHr / _hRs.Count), power);
                 }
-                else
-                {
-
-                }
+                return null;
             });
-            var avgHR = 0;
-            var power = 0;
-            // TODO replace with actual values
+
+            if (results == null) return null;
 
             var ergometerLog = _ergometer.Log;
-            var vO2Max = Nomogram.CalcVO2Max(_patient, power, avgHR);
+            var vO2Max = Nomogram.CalcVO2Max(_patient, results.Item2, results.Item1);
             return new JObject
             {
                 {
@@ -147,7 +151,8 @@ namespace Client
             };
         }
 
-        private void WarmupTimerElapsed(object source, ElapsedEventArgs e) {
+        private void WarmupTimerElapsed(object source, ElapsedEventArgs e)
+        {
             if (_ergometer.HR < 130)
             {
                 if (_patient.IsMale)
