@@ -15,7 +15,7 @@ namespace Client
         private readonly Ergometer _ergometer;
         private Patient _patient;
 
-        public TestState TestState { get; set; } = TestState.No;
+        public TestState CurrentState { get; set; } = TestState.No;
 
         private static readonly double[][] _ageValues =
         {
@@ -51,12 +51,12 @@ namespace Client
         /// <returns>Returns the test results.</returns>
         public async Task<JObject> StartAsync()
         {
-            var testTask = new Task<Tuple<int, int>>(() =>
+            var results = await Task.Run(() =>
             {
                 _ergometer.Reset();
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
                 _hRs = new List<int>();
-                TestState = TestState.Warmup;
+                CurrentState = TestState.Warmup;
 
                 _ergometer.RequestedPower = 50;
 
@@ -94,9 +94,9 @@ namespace Client
                 int power = 0;
 
                 var warmup = false;
-                while (TestState != TestState.No)
+                while (CurrentState != TestState.No)
                 {
-                    switch (TestState)
+                    switch (CurrentState)
                     {
                         case TestState.Warmup:
                             if (!warmup)
@@ -132,8 +132,6 @@ namespace Client
                 }
                 return null;
             });
-            testTask.RunSynchronously();
-            var results = await testTask;
 
             if (results == null) return null;
 
@@ -196,22 +194,22 @@ namespace Client
         /// </summary>
         private void ChangeState(object source, ElapsedEventArgs e)
         {
-            switch (TestState)
+            switch (CurrentState)
             {
                 case TestState.Warmup:
-                    TestState = TestState.Test;
+                    CurrentState = TestState.Test;
                     break;
                 case TestState.Test:
-                    TestState = TestState.EndTest;
+                    CurrentState = TestState.EndTest;
                     break;
                 case TestState.EndTest:
-                    TestState = TestState.Cooldown;
+                    CurrentState = TestState.Cooldown;
                     break;
                 case TestState.Cooldown:
-                    TestState = TestState.No;
+                    CurrentState = TestState.No;
                     break;
             }
-            Debug.WriteLine(TestState.ToString());
+            Debug.WriteLine(CurrentState.ToString());
         }
     }
 

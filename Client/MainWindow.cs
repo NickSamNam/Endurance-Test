@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO.Ports;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Client
@@ -52,12 +53,12 @@ namespace Client
         /// <summary>
         ///   Starts Test
         /// </summary>
-        private void btn_start_Click(object sender, EventArgs e)
+        private async void btn_start_Click(object sender, EventArgs e)
         {
             pn_patient.Visible = false;
             pn_test.Visible = false;
 
-            StartTest(new Patient(
+            await StartTest(new Patient(
                     tb_first_name.Text,
                     tb_last_name.Text,
                     dtp_birthdate.MinDate,
@@ -66,7 +67,7 @@ namespace Client
             );
         }
 
-        private async void StartTest(Patient patient)
+        private async Task StartTest(Patient patient)
         {
             var result = await new EnduranceTest(_ergometer, patient).StartAsync();
             if (result != null)

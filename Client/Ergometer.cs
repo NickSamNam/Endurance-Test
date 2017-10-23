@@ -164,6 +164,7 @@ namespace Client
         {
             var timer = new Timer(100);
             timer.Elapsed += Status;
+            timer.Start();
         }
 
         private void Status(object sender, ElapsedEventArgs e)
