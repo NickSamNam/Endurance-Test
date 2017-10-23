@@ -9,10 +9,10 @@ namespace Client
 {
     public class EnduranceTest
     {
-        private Ergometer _ergometer;
+        private readonly Ergometer _ergometer;
         private Patient _patient;
 
-        public TestState TestState { get; set; } = TestState.NO;
+        public TestState TestState { get; set; } = TestState.No;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="EnduranceTest" /> class.
@@ -31,35 +31,66 @@ namespace Client
         /// <returns>Returns the test results.</returns>
         public async Task<JObject> StartAsync()
         {
-            new Thread(() => {
-                TestState = TestState.WARMUP;
+            await new Task(() =>
+            {
+                _ergometer.Reset();
+                TestState = TestState.Warmup;
 
                 _ergometer.RequestedPower = 50;
 
                 var stateTimer = new Timer();
-                stateTimer.Elapsed += new ElapsedEventHandler(ChangeState);
+                stateTimer.Elapsed += ChangeState;
                 stateTimer.Interval = 120000;
                 stateTimer.Start();
 
-                while(TestState != TestState.NO)
+                while (TestState != TestState.No)
                 {
                     switch (TestState)
                     {
-                        case TestState.WARMUP:
+                        case TestState.Warmup:
                             break;
-                        case TestState.TEST:
+                        case TestState.Test:
                             break;
-                        case TestState.ENDTEST:
+                        case TestState.EndTest:
                             break;
-                        case TestState.COOLDOWN:
+                        case TestState.Cooldown:
                             break;
                     }
                 }
 
                 stateTimer.Stop();
-            }) .Start();
+            });
+            // TODO replace with actual values
+            var avgHR = 0;
+            var power = 0;
 
-            return null;
+            var ergometerLog = _ergometer.Log;
+            var vO2Max = Nomogram.CalcVO2Max(_patient, power, avgHR);
+            return new JObject
+            {
+                {
+                    "EnduranceTest", new JObject
+                    {
+                        {
+                            "Patient", new JObject
+                            {
+                                {"FirstName", _patient.FirstName},
+                                {"LastName", _patient.LastName},
+                                {"BirthDate", _patient.Birthdate.ToString("dd-MM-yyy")}
+                            }
+                        },
+                        {
+                            "TestResults", new JObject
+                            {
+                                {"VO2Max", vO2Max}
+                            }
+                        },
+                        {
+                            "ErgometerLog", ergometerLog
+                        }
+                    }
+                }
+            };
         }
 
         /// <summary>
@@ -69,21 +100,29 @@ namespace Client
         {
             switch (TestState)
             {
-                case TestState.WARMUP: TestState = TestState.TEST;
+                case TestState.Warmup:
+                    TestState = TestState.Test;
                     break;
-                case TestState.TEST: TestState = TestState.ENDTEST;
+                case TestState.Test:
+                    TestState = TestState.EndTest;
                     break;
-                case TestState.ENDTEST: TestState = TestState.COOLDOWN;
+                case TestState.EndTest:
+                    TestState = TestState.Cooldown;
                     break;
-                case TestState.COOLDOWN: TestState = TestState.NO;
+                case TestState.Cooldown:
+                    TestState = TestState.No;
                     break;
             }
             Debug.WriteLine(TestState.ToString());
         }
     }
 
-    public enum TestState {
-        NO, WARMUP, TEST, ENDTEST, COOLDOWN
+    public enum TestState
+    {
+        No,
+        Warmup,
+        Test,
+        EndTest,
+        Cooldown
     }
-            
 }

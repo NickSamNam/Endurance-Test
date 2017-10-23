@@ -24,7 +24,7 @@ namespace Client
         /// <summary>
         ///   Get the log of ergometer values.
         /// </summary>
-        public JObject Log { get; private set; }
+        public JArray Log { get; } = new JArray();
 
         /// <summary>
         ///   Get the reported heart rate.
@@ -95,7 +95,7 @@ namespace Client
         {
             try
             {
-                var serialPort = (SerialPort)sender;
+                var serialPort = (SerialPort) sender;
                 var data = serialPort.ReadLine();
 
                 switch (data.Trim())
@@ -118,21 +118,26 @@ namespace Client
                     if (dataSt.Length != 8)
                         return;
 
-                    HR  = int.Parse(dataSt[0]);
+                    HR = int.Parse(dataSt[0]);
                     RPM = int.Parse(dataSt[1]);
                     Speed = decimal.Parse(dataSt[2]) / 10;
                     Distance = decimal.Parse(dataSt[3]) / 10;
                     RequestedPower = int.Parse(dataSt[4]);
-                    Time = TimeSpan.FromSeconds(int.Parse(dataSt[6].Split(':')[0]) * 60 + int.Parse(dataSt[6].Split(':')[1]));
+                    Time = TimeSpan.FromSeconds(int.Parse(dataSt[6].Split(':')[0]) * 60 +
+                                                int.Parse(dataSt[6].Split(':')[1]));
                     ActualPower = int.Parse(dataSt[7]);
 
+                    if (Time.TotalSeconds - Log.Last["Time"].ToObject<int>()  >= 5)
+                    {
+                        LogCurrent();
+                    }
                 }
                 catch (ArgumentNullException ane)
                 {
                     Debug.WriteLine(ane.StackTrace);
                 }
                 catch (FormatException fe)
-                { 
+                {
                     Debug.WriteLine(fe.StackTrace);
                 }
             }
@@ -140,6 +145,20 @@ namespace Client
             {
                 Debug.WriteLine(ioe.StackTrace);
             }
+        }
+
+        private void LogCurrent()
+        {
+            Log.Add(new JObject
+            {
+                { "HR", HR },
+                { "RPM", RPM },
+                { "ActualPower", ActualPower },
+                { "RequestedPower", RequestedPower },
+                { "Speed", Speed },
+                { "Distance", Distance },
+                { "Time", Time.TotalSeconds }
+            });
         }
 
         /// <summary>
