@@ -41,6 +41,14 @@ namespace Client
         }
 
         /// <summary>
+        ///  Gets log file
+        /// </summary>
+        private void btn_log_Click(object sender, System.EventArgs e)
+        {
+            // TODO: show graphs
+        }
+
+        /// <summary>
         ///   Starts Test
         /// </summary>
         private void btn_start_Click(object sender, EventArgs e)
