@@ -35,7 +35,8 @@ namespace Client
                 pn_patient.Visible = true;
                 pn_connect.Visible = false;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Debug.WriteLine(ex.StackTrace);
             }
         }
@@ -57,8 +58,33 @@ namespace Client
             );
         }
 
-        private async void StartTest(Patient patient) {
-            await new EnduranceTest(_ergometer, patient).StartAsync();
+        private async void StartTest(Patient patient)
+        {
+            var result = await new EnduranceTest(_ergometer, patient).StartAsync();
+            if (result != null)
+            {
+                var response = await LogServer.PutAsync(result);
+                if (response["Error"] != null)
+                {
+                    switch (response["Error"].ToObject<int>())
+                    {
+                        case 1:
+                            MessageBox.Show(this, "Log invalid.", "Saving failed.");
+                            return;
+                    }
+                }
+                else if (response["LogID"] != null)
+                {
+                    MessageBox.Show(this, response["LogID"].ToObject<string>(), "Your LogID.");
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show(this, "Test result invalid, please try again.", "Test failed.");
+                return;
+            }
+            MessageBox.Show(this, "An unknown error has occured, please try again.", "Unkown error.");
         }
     }
 }
