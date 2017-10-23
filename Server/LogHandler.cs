@@ -39,8 +39,8 @@ namespace Server
 
             try
             {
-                using (var s = new StreamReader(stream))
-                using (var reader = new JSchemaValidatingReader(new JsonTextReader(s)))
+                var s = new StreamReader(stream);
+                var reader = new JSchemaValidatingReader(new JsonTextReader(s));
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                 using (var w = new StreamWriter(fs))
                 using (var writer = new JsonTextWriter(w))

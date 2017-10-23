@@ -90,13 +90,15 @@ namespace Client
                 testTimer.Interval = 15000;
                 testTimer.Elapsed += EndTestTimerElapsed;
 
-                var cooldown = new Timer();
-                cooldown.Interval = 5000;
-                cooldown.Elapsed += CooldownTimerElapsed;
+                var cooldownTimer = new Timer();
+                cooldownTimer.Interval = 5000;
+                cooldownTimer.Elapsed += CooldownTimerElapsed;
 
                 int power = 0;
 
                 var warmup = false;
+                var endtest = false;
+                var cooldown = false;
                 while (CurrentState != TestState.No)
                 {
                     switch (CurrentState)
@@ -113,15 +115,23 @@ namespace Client
                             power = _ergometer.RequestedPower;
                             break;
                         case TestState.EndTest:
-                            testTimer.Start();
+                            if (!endtest)
+                            {
+                                testTimer.Start();
+                                endtest = true;
+                            }
                             break;
                         case TestState.Cooldown:
-                            testTimer.Stop();
-                            cooldown.Start();
+                            if (!cooldown)
+                            {
+                                testTimer.Stop();
+                                cooldownTimer.Start();
+                                cooldown = true;
+                            }
                             break;
                     }
                 }
-                cooldown.Stop();
+                cooldownTimer.Stop();
                 stateTimer.Stop();
 
                 if (_hRs.Max() - _hRs.Min() <= 5)
