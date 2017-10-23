@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System.IO.Ports;
 using System.Diagnostics;
+using System.Timers;
 
 namespace Client
 {
@@ -41,14 +42,18 @@ namespace Client
         /// </summary>
         public int ActualPower { get; private set; }
 
+        private int _requestedPower;
+
         /// <summary>
         ///   Get the reported requested power.
         /// </summary>
         public int RequestedPower
         {
-            get => RequestedPower;
+            get => _requestedPower;
             set
             {
+                if (value > 400 || value < 25) return;
+                _requestedPower = value;
                 var _out = $"PW {value}";
                 _serialPort.WriteLine(_out);
             }
@@ -76,6 +81,12 @@ namespace Client
         {
             _cmMode = false;
             const string _out = "RS";
+            _serialPort.WriteLine(_out);
+        }
+
+        public void Status()
+        {
+            const string _out = "ST";
             _serialPort.WriteLine(_out);
         }
 
@@ -108,6 +119,7 @@ namespace Client
                         return;
                     case "RUN":
                         _cmMode = true;
+                        AutoUpdate();
                         return;
                 }
 
@@ -122,12 +134,13 @@ namespace Client
                     RPM = int.Parse(dataSt[1]);
                     Speed = decimal.Parse(dataSt[2]) / 10;
                     Distance = decimal.Parse(dataSt[3]) / 10;
-                    RequestedPower = int.Parse(dataSt[4]);
+//                    RequestedPower = int.Parse(dataSt[4]);
                     Time = TimeSpan.FromSeconds(int.Parse(dataSt[6].Split(':')[0]) * 60 +
                                                 int.Parse(dataSt[6].Split(':')[1]));
                     ActualPower = int.Parse(dataSt[7]);
 
-                    if (Time.TotalSeconds - Log.Last["Time"].ToObject<int>()  >= 5)
+                    if (Log.Last != null && Log.Last["Time"] != null &&
+                        Time.TotalSeconds - Log.Last["Time"].ToObject<int>() >= 5)
                     {
                         LogCurrent();
                     }
@@ -147,17 +160,41 @@ namespace Client
             }
         }
 
+        private void AutoUpdate()
+        {
+            var timer = new Timer(100);
+            timer.Elapsed += Status;
+        }
+
+        private void Status(object sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                if (_cmMode)
+                {
+                    Status();
+                }
+                else
+                {
+                    ((Timer) sender).Dispose();
+                }
+            }
+            catch (InvalidOperationException)
+            {
+            }
+        }
+
         private void LogCurrent()
         {
             Log.Add(new JObject
             {
-                { "HR", HR },
-                { "RPM", RPM },
-                { "ActualPower", ActualPower },
-                { "RequestedPower", RequestedPower },
-                { "Speed", Speed },
-                { "Distance", Distance },
-                { "Time", Time.TotalSeconds }
+                {"HR", HR},
+                {"RPM", RPM},
+                {"ActualPower", ActualPower},
+                {"RequestedPower", RequestedPower},
+                {"Speed", Speed},
+                {"Distance", Distance},
+                {"Time", Time.TotalSeconds}
             });
         }
 

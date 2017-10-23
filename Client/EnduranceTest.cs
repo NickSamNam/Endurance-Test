@@ -51,8 +51,10 @@ namespace Client
         /// <returns>Returns the test results.</returns>
         public async Task<JObject> StartAsync()
         {
-            var results = await new Task<Tuple<int, int>>(() =>
+            var testTask = new Task<Tuple<int, int>>(() =>
             {
+                _ergometer.Reset();
+                Thread.Sleep(500);
                 _hRs = new List<int>();
                 TestState = TestState.Warmup;
 
@@ -77,35 +79,46 @@ namespace Client
                 }
 
                 int[] hRs = new int[8];
+                var warmupTimer = new Timer();
+                warmupTimer.Interval = 15000;
+                warmupTimer.Elapsed += WarmupTimerElapsed;
+
                 var testTimer = new Timer();
-                testTimer.Interval = 1500;
+                testTimer.Interval = 15000;
+                testTimer.Elapsed += EndTestTimerElapsed;
+
+                var cooldown = new Timer();
+                cooldown.Interval = 5000;
+                cooldown.Elapsed += CooldownTimerElapsed;
 
                 int power = 0;
 
+                var warmup = false;
                 while (TestState != TestState.No)
                 {
                     switch (TestState)
                     {
                         case TestState.Warmup:
-                            testTimer.Start();
-                            testTimer.Elapsed += WarmupTimerElapsed;
+                            if (!warmup)
+                            {
+                                warmupTimer.Start();
+                                warmup = true;
+                            }
                             break;
                         case TestState.Test:
-                            testTimer.Stop();
-                            testTimer = new Timer();
-                            testTimer.Interval = 1500;
+                            warmupTimer.Stop();
                             power = _ergometer.RequestedPower;
                             break;
                         case TestState.EndTest:
                             testTimer.Start();
-                            testTimer.Elapsed += EndTestTimerElapsed;
                             break;
                         case TestState.Cooldown:
                             testTimer.Stop();
-                            _ergometer.RequestedPower = 50;
+                            cooldown.Start();
                             break;
                     }
                 }
+                cooldown.Stop();
                 stateTimer.Stop();
 
                 if (_hRs.Max() - _hRs.Min() <= 5)
@@ -119,6 +132,8 @@ namespace Client
                 }
                 return null;
             });
+            testTask.RunSynchronously();
+            var results = await testTask;
 
             if (results == null) return null;
 
@@ -151,9 +166,14 @@ namespace Client
             };
         }
 
+        private void CooldownTimerElapsed(object source, ElapsedEventArgs e)
+        {
+            _ergometer.RequestedPower -= 25;
+        }
+
         private void WarmupTimerElapsed(object source, ElapsedEventArgs e)
         {
-            if (_ergometer.HR < 130)
+            if (_ergometer.HR < 130 && _ergometer.RPM > 50)
             {
                 if (_patient.IsMale)
                     _ergometer.RequestedPower += 50;
