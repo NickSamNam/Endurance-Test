@@ -54,7 +54,7 @@ namespace Client
                 await sendTask;
                 var sizeTask = stream.ReadAsync(sizeBuffer, 0, sizeBuffer.Length);
                 await sizeTask;
-                stream.SetLength(BitConverter.ToInt64(sizeBuffer, 0));
+                stream.ReadTimeout = 1000;
                 return await ProcessResponseFromStreamAsync(stream);
             }
         }

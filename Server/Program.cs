@@ -143,7 +143,7 @@ namespace Server
                         {
                             const int readTimeout = 1000;
                             _stream.ReadTimeout = readTimeout;
-                            Send(LogHandler.PutFromStream(_stream));
+                            Send(new JObject {"LogID", LogHandler.PutFromStream(_stream)}.ToString());
                         }
                         catch (JsonException)
                         {

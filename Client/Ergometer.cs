@@ -37,12 +37,12 @@ namespace Client
         /// <summary>
         ///   Get the reported heart rate.
         /// </summary>
-        public int HR { get; private set; }
+        public int HR { get => 130; private set { } }
 
         /// <summary>
         ///   Get the reported cycling rate.
         /// </summary>
-        public int RPM { get; private set; }
+        public int RPM { get => 60; private set { } }
 
         /// <summary>
         ///   Get the reported actual power.
