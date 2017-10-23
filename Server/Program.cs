@@ -143,7 +143,7 @@ namespace Server
                         {
                             const int readTimeout = 1000;
                             _stream.ReadTimeout = readTimeout;
-                            Send(new JObject {"LogID", LogHandler.PutFromStream(_stream)}.ToString());
+                            Send(new JObject {{"LogID", LogHandler.PutFromStream(_stream)}}.ToString());
                         }
                         catch (JsonException)
                         {
@@ -185,7 +185,13 @@ namespace Server
             var buffer = new byte[prefix.Length + msg.Length];
             Buffer.BlockCopy(prefix, 0, buffer, 0, prefix.Length);
             Buffer.BlockCopy(msg, 0, buffer, prefix.Length, msg.Length);
-            _stream.Write(buffer, 0, buffer.Length);
+            try
+            {
+                _stream.Write(buffer, 0, buffer.Length);
+            }
+            catch (ObjectDisposedException)
+            {
+            }
         }
 
         /// <summary>
@@ -214,7 +220,7 @@ namespace Server
             return cert;
         }
 
-        private string ErrorAsJSON(Error error) => $@"{{""Error:{(int) error}}}";
+        private string ErrorAsJSON(Error error) => $@"{{""Error"":{(int) error}}}";
 
         internal enum Error
         {

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 
 namespace Client
 {
@@ -70,14 +71,15 @@ namespace Client
         private async Task StartTest(Patient patient)
         {
             var result = await new EnduranceTest(_ergometer, patient, this).StartAsync();
-            if (result != null)
+            if (result["EnduranceTest"] != null)
             {
                 var response = await LogServer.PutAsync(result);
                 if (response["Error"] != null)
                 {
-                    switch (response["Error"].ToObject<int>())
+                    var error = response["Error"].ToObject<int>();
+                    switch (error)
                     {
-                        case 1:
+                        case 0:
                             MessageBox.Show(this, "Log invalid.", "Saving failed.");
                             return;
                     }
@@ -98,16 +100,18 @@ namespace Client
 
         public void OnStateChanged(string state)
         {
-            lb_state.Invoke(new Action(()=> lb_state.Text = state));
+            lb_state.Invoke(new Action(() => lb_state.Text = state));
 
-            if (state == "NO") {
+            if (state == "NO")
+            {
                 lb_state.Invoke(new Action(() => lb_state.Text = "Test is done!"));
             }
         }
 
         public void OnErgometerDataReceived(int rpm, int hr, int power, TimeSpan time)
         {
-            this.Invoke(new MethodInvoker(() => {
+            this.Invoke(new MethodInvoker(() =>
+            {
                 lb_rpm.Text = rpm.ToString();
                 lb_hr.Text = hr.ToString();
                 lb_power.Text = power.ToString();

@@ -33,12 +33,12 @@ namespace Client
         ///   Send a log to the log server.
         /// </summary>
         /// <param name="log">The log to send.</param>
-        /// <returns>Returns the log's unique id to use when getting it from the server, or null if the log is invalid.</returns>
+        /// <returns>Returns the log's unique id to use when getting it from the server, or an error or empty JSON if the log is invalid.</returns>
         /// <exception cref="AuthenticationException">The server authentication has failed.</exception>
         public static async Task<JObject> PutAsync(JObject log)
         {
             var response = await RequestAsync(log.ToString(), Request.Put);
-            return response["Error"] == null ? null : response;
+            return response;
         }
 
         private static async Task<JObject> RequestAsync(string request, Request requestType)
@@ -54,6 +54,7 @@ namespace Client
                 await sendTask;
                 var sizeTask = stream.ReadAsync(sizeBuffer, 0, sizeBuffer.Length);
                 await sizeTask;
+                var messageLength = BitConverter.ToUInt64(sizeBuffer, 0);
                 stream.ReadTimeout = 1000;
                 return await ProcessResponseFromStreamAsync(stream);
             }
@@ -92,7 +93,14 @@ namespace Client
             using (var r = new StreamReader(stream))
             using (var reader = new JsonTextReader(r))
             {
-                return (JObject) await JToken.ReadFromAsync(reader);
+                while (reader.Read())
+                {
+                    if (reader.TokenType == JsonToken.StartObject)
+                    {
+                        return (JObject) await JToken.ReadFromAsync(reader);
+                    }
+                }
+                return new JObject();
             }
         }
 

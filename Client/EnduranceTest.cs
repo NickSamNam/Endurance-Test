@@ -65,7 +65,7 @@ namespace Client
 
                 var stateTimer = new Timer();
                 stateTimer.Elapsed += ChangeState;
-                stateTimer.Interval = 10000;
+                stateTimer.Interval = 120000;
                 stateTimer.Start();
 
                 double[] prevValue = _ageValues[0];
@@ -83,15 +83,15 @@ namespace Client
 
                 int[] hRs = new int[8];
                 var warmupTimer = new Timer();
-                warmupTimer.Interval = 1000;
+                warmupTimer.Interval = 15000;
                 warmupTimer.Elapsed += WarmupTimerElapsed;
 
                 var testTimer = new Timer();
-                testTimer.Interval = 1000;
+                testTimer.Interval = 15000;
                 testTimer.Elapsed += EndTestTimerElapsed;
 
                 var cooldownTimer = new Timer();
-                cooldownTimer.Interval = 1000;
+                cooldownTimer.Interval = 5000;
                 cooldownTimer.Elapsed += CooldownTimerElapsed;
 
                 int power = 0;
