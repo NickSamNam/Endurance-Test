@@ -6,20 +6,27 @@ using System.Timers;
 
 namespace Client
 {
+    public interface IErgometerListener {
+        void OnErgometerDataReceived(int rpm, int hr, int power, TimeSpan time);
+    }
+
     public class Ergometer
     {
         private readonly SerialPort _serialPort;
         private bool _cmMode;
+        private IErgometerListener _listener;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="Ergometer" /> class.
         /// </summary>
         /// <param name="port">The serial port on which to communicate with the ergometer.</param>
-        public Ergometer(string port)
+        public Ergometer(string port, IErgometerListener listener)
         {
             _serialPort = new SerialPort(port, 9600, Parity.None);
             _serialPort.Open();
             _serialPort.DataReceived += OnReceive;
+
+            _listener = listener;
         }
 
         /// <summary>
@@ -139,10 +146,12 @@ namespace Client
                                                 int.Parse(dataSt[6].Split(':')[1]));
                     ActualPower = int.Parse(dataSt[7]);
 
+                    _listener.OnErgometerDataReceived(RPM, HR, RequestedPower, Time);
+
                     if (Log.Last != null && Log.Last["Time"] != null &&
                         Time.TotalSeconds - Log.Last["Time"].ToObject<int>() >= 5)
                     {
-                        LogCurrent();
+                        LogCurrent();    
                     }
                 }
                 catch (ArgumentNullException ane)

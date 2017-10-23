@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="EnduranceTest.cs" />
     <Compile Include="Ergometer.cs" />
+    <Compile Include="ITestListener.cs" />
     <Compile Include="LogServer.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>

@@ -16,6 +16,7 @@ namespace Client
         private Patient _patient;
 
         public TestState CurrentState { get; set; } = TestState.No;
+        private ITestListener _listener;
 
         private static readonly double[][] _ageValues =
         {
@@ -39,9 +40,11 @@ namespace Client
         /// </summary>
         /// <param name="ergometer">The ergometer from which to get measurements.</param>
         /// <param name="patient">The patient who's being tested.</param>
-        public EnduranceTest(Ergometer ergometer, Patient patient)
+        /// <param name="listener">The listener the test replies to.</param>
+        public EnduranceTest(Ergometer ergometer, Patient patient, ITestListener listener)
         {
             _ergometer = ergometer;
+            _listener = listener;
             _patient = patient;
         }
 
@@ -57,7 +60,7 @@ namespace Client
                 Thread.Sleep(1000);
                 _hRs = new List<int>();
                 CurrentState = TestState.Warmup;
-
+                _listener.OnStateChanged(CurrentState.ToString());
                 _ergometer.RequestedPower = 50;
 
                 var stateTimer = new Timer();
@@ -123,12 +126,7 @@ namespace Client
 
                 if (_hRs.Max() - _hRs.Min() <= 5)
                 {
-                    double avgHr = 0;
-                    foreach (int hr in _hRs)
-                    {
-                        avgHr += hr;
-                    }
-                    return Tuple.Create(Convert.ToInt32(avgHr / _hRs.Count), power);
+                    return Tuple.Create(Convert.ToInt32(_hRs.Average()), power);
                 }
                 return null;
             });
@@ -209,6 +207,9 @@ namespace Client
                     CurrentState = TestState.No;
                     break;
             }
+
+            _listener.OnStateChanged(CurrentState.ToString());
+
             Debug.WriteLine(CurrentState.ToString());
         }
     }
