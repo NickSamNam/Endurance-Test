@@ -26,7 +26,7 @@ namespace Client
         {
             var request = new JObject {{"LogID", logId.ToLower()}};
             var response = await RequestAsync(request.ToString(), Request.Get);
-            return response["Error"] == null ? null : response;
+            return response;
         }
 
         /// <summary>

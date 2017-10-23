@@ -118,6 +118,7 @@
             this.btn_log.TabIndex = 4;
             this.btn_log.Text = "Get Log";
             this.btn_log.UseVisualStyleBackColor = true;
+            this.btn_log.Click += new System.EventHandler(this.btn_log_Click);
             // 
             // label1
             // 

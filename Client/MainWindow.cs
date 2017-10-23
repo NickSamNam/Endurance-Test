@@ -48,6 +48,7 @@ namespace Client
         /// </summary>
         private void btn_log_Click(object sender, System.EventArgs e)
         {
+            LogServer.GetAsync(tb_log.Text);
             // TODO: show graphs
         }
 
