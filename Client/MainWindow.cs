@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json.Linq;
 
 namespace Client
 {
@@ -48,8 +48,13 @@ namespace Client
         /// </summary>
         private void btn_log_Click(object sender, System.EventArgs e)
         {
-            LogServer.GetAsync(tb_log.Text);
-            // TODO: show graphs
+            var result = LogServer.GetAsync(tb_log.Text);
+            if (result == null) {
+                MessageBox.Show(this, "Log with that ID doesn't excists!");
+                return;
+            }
+
+            new Log(JObject.Parse(result.ToString())).Show();
         }
 
         /// <summary>
