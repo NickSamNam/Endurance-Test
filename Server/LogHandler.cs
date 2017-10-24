@@ -143,6 +143,14 @@ namespace Server
             {
                 return null;
             }
+            catch (DirectoryNotFoundException)
+            {
+                return null;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return null;
+            }
         }
 
         #region JSON Schema Log

@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO.Ports;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -46,15 +47,36 @@ namespace Client
         /// <summary>
         ///  Gets log file
         /// </summary>
-        private void btn_log_Click(object sender, System.EventArgs e)
+        private async void btn_log_Click(object sender, System.EventArgs e)
         {
-            var result = LogServer.GetAsync(tb_log.Text);
-            if (result == null) {
-                MessageBox.Show(this, "Log with that ID doesn't excists!");
-                return;
+            try
+            {
+                var result = await LogServer.GetAsync(tb_log.Text);
+                if (result["Error"] != null)
+                {
+                    var error = result["Error"].ToObject<int>();
+                    switch (error)
+                    {
+                        case 1:
+                            MessageBox.Show(this, "No log was found with that ID.", "LogID invalid");
+                            return;
+                    }
+                }
+                else if (result["EnduranceTest"] != null)
+                {
+                    new Log(JObject.Parse(result.ToString())).Show();
+                    return;
+                }
+                MessageBox.Show(this, "An unknown error has occured, please try again.", "Unkown error");
             }
-
-            new Log(JObject.Parse(result.ToString())).Show();
+            catch (SocketException se)
+            {
+                if (se.ErrorCode == 10061)
+                {
+                    MessageBox.Show(this, "Could not connect to the server, please check your connection.",
+                        "Connection failed");
+                }
+            }
         }
 
         /// <summary>
@@ -76,32 +98,43 @@ namespace Client
 
         private async Task StartTest(Patient patient)
         {
-            var result = await new EnduranceTest(_ergometer, patient, this).StartAsync();
-            if (result["EnduranceTest"] != null)
+            try
             {
-                var response = await LogServer.PutAsync(result);
-                if (response["Error"] != null)
+                var result = await new EnduranceTest(_ergometer, patient, this).StartAsync();
+                if (result["EnduranceTest"] != null)
                 {
-                    var error = response["Error"].ToObject<int>();
-                    switch (error)
+                    var response = await LogServer.PutAsync(result);
+                    if (response["Error"] != null)
                     {
-                        case 0:
-                            MessageBox.Show(this, "Log invalid.", "Saving failed.");
-                            return;
+                        var error = response["Error"].ToObject<int>();
+                        switch (error)
+                        {
+                            case 0:
+                                MessageBox.Show(this, "Log invalid.", "Saving failed");
+                                return;
+                        }
+                    }
+                    else if (response["LogID"] != null)
+                    {
+                        MessageBox.Show(this, response["LogID"].ToObject<string>(), "Your LogID");
+                        return;
                     }
                 }
-                else if (response["LogID"] != null)
+                else
                 {
-                    MessageBox.Show(this, response["LogID"].ToObject<string>(), "Your LogID.");
+                    MessageBox.Show(this, "Test result invalid, please try again.", "Test failed");
                     return;
                 }
+                MessageBox.Show(this, "An unknown error has occured, please try again.", "Unkown error");
             }
-            else
+            catch (SocketException se)
             {
-                MessageBox.Show(this, "Test result invalid, please try again.", "Test failed.");
-                return;
+                if (se.ErrorCode == 10061)
+                {
+                    MessageBox.Show(this, "Could not connect to the server, please check your connection.",
+                        "Connection failed");
+                }
             }
-            MessageBox.Show(this, "An unknown error has occured, please try again.", "Unkown error.");
         }
 
         public void OnStateChanged(string state)
