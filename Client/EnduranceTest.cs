@@ -155,7 +155,7 @@ namespace Client
                             {
                                 {"FirstName", _patient.FirstName},
                                 {"LastName", _patient.LastName},
-                                {"BirthDate", _patient.Birthdate.ToString("dd-MM-yyy")}
+                                {"BirthDate", _patient.Birthdate.ToString("dd-MM-yyyy")}
                             }
                         },
                         {
