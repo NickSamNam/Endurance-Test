@@ -21,7 +21,7 @@ namespace Server
         private static readonly string AppDataDir = Path.Combine(Environment.GetFolderPath(
             Environment.SpecialFolder.LocalApplicationData,
             Environment.SpecialFolderOption.DoNotVerify), Assembly.GetExecutingAssembly().GetName().Name);
-        
+
         /// <summary>
         /// Save a log from a stream to the filesystem, also validates the data.
         /// </summary>
@@ -148,6 +148,10 @@ namespace Server
                 return null;
             }
             catch (UnauthorizedAccessException)
+            {
+                return null;
+            }
+            catch (NotSupportedException)
             {
                 return null;
             }
