@@ -116,6 +116,13 @@ namespace Server
                 File.Delete(path);
                 throw;
             }
+            catch (IOException e)
+            {
+                if (e.HResult != -2146232800)
+                {
+                    throw;
+                }
+            }
 
             return logID;
         }

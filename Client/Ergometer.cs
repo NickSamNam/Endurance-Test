@@ -169,7 +169,7 @@ namespace Client
             }
         }
 
-        private void AutoUpdate()
+        public void AutoUpdate()
         {
             var timer = new Timer(100);
             timer.Elapsed += Status;
@@ -178,19 +178,15 @@ namespace Client
 
         private void Status(object sender, ElapsedEventArgs e)
         {
-            try
+            ActualPower = 100;
+            HR = 130;
+            RPM = 60;
+            Speed = 35;
+            Time += TimeSpan.FromSeconds(0.1);
+            Distance += 0.97m;
+            if (Log.Last?["Time"] != null && Time.TotalSeconds - Log.Last["Time"].ToObject<int>() >= 5)
             {
-                if (_cmMode)
-                {
-                    Status();
-                }
-                else
-                {
-                    ((Timer) sender).Dispose();
-                }
-            }
-            catch (InvalidOperationException)
-            {
+                LogCurrent();
             }
         }
 
@@ -204,7 +200,7 @@ namespace Client
                 {"RequestedPower", RequestedPower},
                 {"Speed", Speed},
                 {"Distance", Distance},
-                {"Time", Time.TotalSeconds}
+                {"Time", Convert.ToInt32(Time.TotalSeconds)}
             });
         }
 

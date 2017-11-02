@@ -57,6 +57,7 @@ namespace Client
             var results = await Task.Run(() =>
             {
                 _ergometer.Reset();
+                _ergometer.AutoUpdate();
                 Thread.Sleep(1000);
                 _hRs = new List<int>();
                 CurrentState = TestState.Warmup;
