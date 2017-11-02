@@ -14,12 +14,13 @@ namespace Client
     {
         private readonly SerialPort _serialPort;
         private bool _cmMode;
-        private IErgometerListener _listener;
+        private readonly IErgometerListener _listener;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="Ergometer" /> class.
         /// </summary>
         /// <param name="port">The serial port on which to communicate with the ergometer.</param>
+        /// <param name="listener">Ergometer event listener.</param>
         public Ergometer(string port, IErgometerListener listener)
         {
             _serialPort = new SerialPort(port, 9600, Parity.None);
@@ -141,15 +142,14 @@ namespace Client
                     RPM = int.Parse(dataSt[1]);
                     Speed = decimal.Parse(dataSt[2]) / 10;
                     Distance = decimal.Parse(dataSt[3]) / 10;
-//                    RequestedPower = int.Parse(dataSt[4]);
+                    RequestedPower = int.Parse(dataSt[4]);
                     Time = TimeSpan.FromSeconds(int.Parse(dataSt[6].Split(':')[0]) * 60 +
                                                 int.Parse(dataSt[6].Split(':')[1]));
                     ActualPower = int.Parse(dataSt[7]);
 
                     _listener.OnErgometerDataReceived(RPM, HR, RequestedPower, Time);
 
-                    if (Log.Last != null && Log.Last["Time"] != null &&
-                        Time.TotalSeconds - Log.Last["Time"].ToObject<int>() >= 5)
+                    if (Log.Last?["Time"] != null && Time.TotalSeconds - Log.Last["Time"].ToObject<int>() >= 5)
                     {
                         LogCurrent();    
                     }
