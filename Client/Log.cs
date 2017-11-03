@@ -30,10 +30,10 @@ namespace Client
 
             for (int i = 0; i < length; i++) {
                 var line = _log.EnduranceTest.ErgometerLog[i];
-                hrs[i] = line.HR;
-                power[i] = line.ActualPower;
-                rpm[i] = line.RPM;
-                speed[i] = line.Speed;
+                hrs[i] = line.HR ?? 0;
+                power[i] = line.ActualPower ?? 0;
+                rpm[i] = line.RPM ?? 0;
+                speed[i] = line.Speed ?? 0;
             }
 
             FillChart(ch_log_hr, hrs);
