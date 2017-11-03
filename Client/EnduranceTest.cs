@@ -124,6 +124,7 @@ namespace Client
                         case TestState.Cooldown:
                             if (!cooldown)
                             {
+                                stateTimer.Interval = 60000;
                                 testTimer.Stop();
                                 cooldownTimer.Start();
                                 cooldown = true;
