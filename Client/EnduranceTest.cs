@@ -134,6 +134,7 @@ namespace Client
                 }
                 cooldownTimer.Stop();
                 stateTimer.Stop();
+                _ergometer.Close();
 
                 if (_hRs.Min() >= 130 && _hRs.Max() <= _patient.MaxHeartRate && _hRs.Max() - _hRs.Min() <= 5)
                 {
