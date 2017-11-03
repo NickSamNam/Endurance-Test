@@ -66,7 +66,7 @@ namespace Client
 
                 var stateTimer = new Timer();
                 stateTimer.Elapsed += ChangeState;
-                stateTimer.Interval = 30000;
+                stateTimer.Interval = 120000;
                 stateTimer.Start();
 
                 double[] prevValue = _ageValues[0];
@@ -125,6 +125,7 @@ namespace Client
                         case TestState.Cooldown:
                             if (!cooldown)
                             {
+                                stateTimer.Interval = 60000;
                                 testTimer.Stop();
                                 cooldownTimer.Start();
                                 cooldown = true;
