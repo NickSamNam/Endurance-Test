@@ -116,6 +116,7 @@ namespace Client
             {
                 var serialPort = (SerialPort) sender;
                 var data = serialPort.ReadLine();
+                Debug.WriteLine(data);
 
                 switch (data.Trim())
                 {
@@ -142,14 +143,14 @@ namespace Client
                     RPM = int.Parse(dataSt[1]);
                     Speed = decimal.Parse(dataSt[2]) / 10;
                     Distance = decimal.Parse(dataSt[3]) / 10;
-                    RequestedPower = int.Parse(dataSt[4]);
+                    _requestedPower = int.Parse(dataSt[4]);
                     Time = TimeSpan.FromSeconds(int.Parse(dataSt[6].Split(':')[0]) * 60 +
                                                 int.Parse(dataSt[6].Split(':')[1]));
                     ActualPower = int.Parse(dataSt[7]);
 
                     _listener.OnErgometerDataReceived(RPM, HR, RequestedPower, Time);
 
-                    if (Log.Last?["Time"] != null && Time.TotalSeconds - Log.Last["Time"].ToObject<int>() >= 5)
+                    if (Log.Count == 0 || Log.Last?["Time"] != null && Time.TotalSeconds - Log.Last["Time"].ToObject<int>() >= 5)
                     {
                         LogCurrent();    
                     }
@@ -169,7 +170,7 @@ namespace Client
             }
         }
 
-        public void AutoUpdate()
+        private void AutoUpdate()
         {
             var timer = new Timer(100);
             timer.Elapsed += Status;
@@ -178,15 +179,19 @@ namespace Client
 
         private void Status(object sender, ElapsedEventArgs e)
         {
-            ActualPower = 100;
-            HR = 130;
-            RPM = 60;
-            Speed = 35;
-            Time += TimeSpan.FromSeconds(0.1);
-            Distance += 0.97m;
-            if (Log.Last?["Time"] != null && Time.TotalSeconds - Log.Last["Time"].ToObject<int>() >= 5)
+            try
             {
-                LogCurrent();
+                if (_cmMode)
+                {
+                    Status();
+                }
+                else
+                {
+                    ((Timer)sender).Dispose();
+                }
+            }
+            catch (InvalidOperationException)
+            {
             }
         }
 

@@ -57,7 +57,6 @@ namespace Client
             var results = await Task.Run(() =>
             {
                 _ergometer.Reset();
-                _ergometer.AutoUpdate();
                 Thread.Sleep(1000);
                 _hRs = new List<int>();
                 CurrentState = TestState.Warmup;
@@ -66,7 +65,7 @@ namespace Client
 
                 var stateTimer = new Timer();
                 stateTimer.Elapsed += ChangeState;
-                stateTimer.Interval = 30000;
+                stateTimer.Interval = 120000;
                 stateTimer.Start();
 
                 double[] prevValue = _ageValues[0];
@@ -84,15 +83,15 @@ namespace Client
 
                 int[] hRs = new int[8];
                 var warmupTimer = new Timer();
-                warmupTimer.Interval = 3750;
+                warmupTimer.Interval = 15000;
                 warmupTimer.Elapsed += WarmupTimerElapsed;
 
                 var testTimer = new Timer();
-                testTimer.Interval = 3750;
+                testTimer.Interval = 15000;
                 testTimer.Elapsed += EndTestTimerElapsed;
 
                 var cooldownTimer = new Timer();
-                cooldownTimer.Interval = 1250;
+                cooldownTimer.Interval = 5000;
                 cooldownTimer.Elapsed += CooldownTimerElapsed;
 
                 int power = 0;
@@ -135,7 +134,7 @@ namespace Client
                 cooldownTimer.Stop();
                 stateTimer.Stop();
 
-                if (_hRs.Max() - _hRs.Min() <= 5)
+                if (_hRs.Min() >= 130 && _hRs.Max() <= _patient.MaxHeartRate && _hRs.Max() - _hRs.Min() <= 5)
                 {
                     return Tuple.Create(Convert.ToInt32(_hRs.Average()), power);
                 }
@@ -180,7 +179,7 @@ namespace Client
 
         private void WarmupTimerElapsed(object source, ElapsedEventArgs e)
         {
-            if (_ergometer.HR < 100 && _ergometer.RPM > 50)
+            if (_ergometer.HR < 130 && _ergometer.RPM > 50)
             {
                 if (_patient.IsMale)
                     _ergometer.RequestedPower += 50;

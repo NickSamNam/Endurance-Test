@@ -101,7 +101,7 @@ namespace Client
             try
             {
                 var result = await new EnduranceTest(_ergometer, patient, this).StartAsync();
-                if (result["EnduranceTest"] != null)
+                if (result?["EnduranceTest"] != null)
                 {
                     var response = await LogServer.PutAsync(result);
                     if (response["Error"] != null)
@@ -154,7 +154,7 @@ namespace Client
                 lb_rpm.Text = rpm.ToString();
                 lb_hr.Text = hr.ToString();
                 lb_power.Text = power.ToString();
-                lb_time.Text = time.ToString("mm:ss");
+                lb_time.Text = time.ToString(@"mm\:ss");
             }));
         }
     }

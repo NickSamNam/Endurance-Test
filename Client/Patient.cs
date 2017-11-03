@@ -1,9 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Client
 {
     public struct Patient
     {
+        private static readonly Dictionary<int, int> MaxHeartRates = new Dictionary<int, int>
+        {
+            {15, 210},
+            {25, 200},
+            {35, 190},
+            {40, 180},
+            {45, 170},
+            {50, 160},
+            {55, 150}
+        };
+
         /// <summary>
         ///   Gets the first name of the patient.
         /// </summary>
@@ -28,6 +41,26 @@ namespace Client
         ///   Gets the age of the patient at the current point in time.
         /// </summary>
         public int Age => (int) ((DateTime.Now - Birthdate).Days / 365.25);
+
+        /// <summary>
+        /// Gets the maximum allowed heartrate of the patient in relation to its age.
+        /// </summary>
+        public int MaxHeartRate
+        {
+            get
+            {
+                var roundAge = (int) Math.Round(Age / 5.0) * 5;
+                if (roundAge < MaxHeartRates.Keys.Min())
+                {
+                    return MaxHeartRates[MaxHeartRates.Keys.Min()];
+                }
+                else if (roundAge > MaxHeartRates.Keys.Max())
+                {
+                    return MaxHeartRates[MaxHeartRates.Keys.Max()];
+                }
+                return MaxHeartRates[roundAge];
+            }
+        }
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="Patient" /> class.
