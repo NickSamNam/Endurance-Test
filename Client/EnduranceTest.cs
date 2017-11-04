@@ -82,9 +82,9 @@ namespace Client
                 }
 
                 int[] hRs = new int[8];
-                var warmupTimer = new Timer();
-                warmupTimer.Interval = 15000;
-                warmupTimer.Elapsed += WarmupTimerElapsed;
+                var pretestTimer = new Timer();
+                pretestTimer.Interval = 15000;
+                pretestTimer.Elapsed += WarmupTimerElapsed;
 
                 var testTimer = new Timer();
                 testTimer.Interval = 15000;
@@ -96,7 +96,6 @@ namespace Client
 
                 int power = 0;
 
-                var warmup = false;
                 var test = false;
                 var endtest = false;
                 var cooldown = false;
@@ -105,17 +104,12 @@ namespace Client
                     switch (CurrentState)
                     {
                         case TestState.Warmup:
-                            if (!warmup)
-                            {
-                                warmupTimer.Start();
-                                warmup = true;
-                            }
                             break;
                         case TestState.Test:
                             if (!test)
                             {
                                 _listener.OnStateChanged(CurrentState.ToString(), 240000);
-                                warmupTimer.Stop();
+                                pretestTimer.Start();
                                 power = _ergometer.RequestedPower;
                                 test = true;
                             }
@@ -123,6 +117,7 @@ namespace Client
                         case TestState.EndTest:
                             if (!endtest)
                             {
+                                pretestTimer.Stop();
                                 testTimer.Start();
                                 endtest = true;
                             }
@@ -143,7 +138,7 @@ namespace Client
                 stateTimer.Stop();
                 _ergometer.Close();
 
-                if (_hRs.Min() >= 130 && _hRs.Max() <= _patient.MaxHeartRate && _hRs.Max() - _hRs.Min() <= 5)
+                if (_hRs.Min() >= 130 && _hRs.Max() <= _patient.MaxHeartRate && _hRs.Max() - _hRs.Min() <= 10)
                 {
                     return Tuple.Create(Convert.ToInt32(_hRs.Average()), power);
                 }

@@ -99,7 +99,7 @@ namespace Client
                 "\t Attach the heartrate meter to your ear \n" +
                 "\t press 'Ok' to start the test \n\n" +
                 "The test begins with 2 minutes of warmup were your ideal cycling power will be determined \n" +
-                "During the test the goal is to have a steady heartrate above 130 BPM \n" +
+                "During the test the goal is to have a steady heartrate between 130 and 140 BPM \n" +
                 "Also make sure your RPM stays between 50 and 60", "Start the Test!");
 
             await StartTest(new Patient(
