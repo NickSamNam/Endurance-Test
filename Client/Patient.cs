@@ -38,6 +38,11 @@ namespace Client
         public bool IsMale { get; }
 
         /// <summary>
+        /// Gets the body mass of the patient.
+        /// </summary>
+        public double Mass { get; }
+
+        /// <summary>
         ///   Gets the age of the patient at the current point in time.
         /// </summary>
         public int Age => (int) ((DateTime.Now - Birthdate).Days / 365.25);
@@ -69,12 +74,14 @@ namespace Client
         /// <param name="lastName">The patient's last name.</param>
         /// <param name="birthdate">The patient's birthdate.</param>
         /// <param name="isMale">The patient's gender.</param>
-        public Patient(string firstName, string lastName, DateTime birthdate, bool isMale)
+        /// <param name="mass">The patient's body mass.</param>
+        public Patient(string firstName, string lastName, DateTime birthdate, bool isMale, double mass)
         {
             FirstName = firstName;
             LastName = lastName;
             Birthdate = birthdate;
             IsMale = isMale;
+            Mass = mass;
         }
 
         public bool Equals(Patient other)

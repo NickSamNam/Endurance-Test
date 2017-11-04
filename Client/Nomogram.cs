@@ -53,13 +53,13 @@
         private static readonly double[] AgeFactor = {.87, .83, .78, .75, .71, .68, .65};
 
         /// <summary>
-        ///   Calculate the maximum oxygen consumption.
+        ///   Calculate the absolute maximum oxygen consumption.
         /// </summary>
         /// <param name="patient">The patient whose VO2Max to calculate.</param>
         /// <param name="power">The power at which the patient cycled during the test in watts.</param>
         /// <param name="avgHR">The patient's average heart rate in beats per minute.</param>
         /// <returns>Returns the patient's VO2Max.</returns>
-        public static double CalcVO2Max(Patient patient, int power, int avgHR)
+        public static double CalcVO2MaxAbsolute(Patient patient, int power, int avgHR)
         {
             double calc;
             if (patient.IsMale)
@@ -96,6 +96,20 @@
                     calc *= AgeFactor[6];
                     break;
             }
+            return calc;
+        }
+
+        /// <summary>
+        /// Calculate the maximum oxygen consumption relative to the patient's body mass.
+        /// </summary>
+        /// <param name="patient">The patient whose VO2Max to calculate.</param>
+        /// <param name="power">The power at which the patient cycled during the test in watts.</param>
+        /// <param name="avgHR">The patient's average heart rate in beats per minute.</param>
+        /// <returns></returns>
+        public static double CalcVO2MaxRelative(Patient patient, int power, int avgHR)
+        {
+            var calc = CalcVO2MaxAbsolute(patient, power, avgHR);
+            calc *= 1000 / patient.Mass;
             return calc;
         }
     }

@@ -146,7 +146,7 @@ namespace Client
             if (results == null) return null;
 
             var ergometerLog = _ergometer.Log;
-            var vO2Max = Nomogram.CalcVO2Max(_patient, results.Item2, results.Item1);
+            var vO2Max = Nomogram.CalcVO2MaxAbsolute(_patient, results.Item2, results.Item1);
             return new JObject
             {
                 {
