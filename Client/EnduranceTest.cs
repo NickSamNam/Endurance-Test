@@ -57,7 +57,7 @@ namespace Client
         /// <returns>Returns the test results.</returns>
         public async Task<JObject> StartAsync()
         {
-            double? vO2Max = null;
+            double? vO2MaxAbs = null;
             try
             {
                 var results = await Task.Run(() =>
@@ -148,7 +148,7 @@ namespace Client
 
                     return Tuple.Create(Convert.ToInt32(_hRs.Average()), power);
                 });
-                vO2Max = Nomogram.CalcVO2MaxAbsolute(_patient, results.Item2, results.Item1);
+                vO2MaxAbs = Nomogram.CalcVO2MaxAbsolute(_patient, results.Item2, results.Item1);
             }
             catch (MaxHRReachedException)
             {
@@ -163,6 +163,15 @@ namespace Client
                 new Thread(() => MessageBox.Show("Heartrate too irregular.", "Test failed.")).Start();
             }
             var ergometerLog = _ergometer.Log;
+            double vO2MaxRel;
+            if (vO2MaxAbs == null)
+            {
+                vO2MaxAbs = vO2MaxRel = double.NaN;
+            }
+            else
+            {
+                vO2MaxRel = Nomogram.CalcVO2MaxRelative(_patient, (double) vO2MaxAbs);
+            }
             return new JObject
             {
                 {
@@ -173,13 +182,15 @@ namespace Client
                             {
                                 {"FirstName", _patient.FirstName},
                                 {"LastName", _patient.LastName},
-                                {"BirthDate", _patient.Birthdate.ToString("dd-MM-yyyy")}
+                                {"BirthDate", _patient.Birthdate.ToString("dd-MM-yyyy")},
+                                {"Mass", _patient.Mass}
                             }
                         },
                         {
                             "TestResults", new JObject
                             {
-                                {"VO2Max", vO2Max ?? double.NaN}
+                                {"VO2MaxAbsolute", vO2MaxAbs},
+                                {"VO2MaxRelative", vO2MaxRel}
                             }
                         },
                         {

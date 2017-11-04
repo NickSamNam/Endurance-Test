@@ -246,6 +246,11 @@ namespace Server
 							""type"":""string"",
 							""id"": ""http://jsonschema.net/EnduranceTest/Patient/LastName"",
 							""required"":true
+						},
+						""Mass"": {
+							""type"":""number"",
+							""id"": ""http://jsonschema.net/EnduranceTest/Patient/Mass"",
+							""required"":true
 						}
 					}
 				},
@@ -254,9 +259,14 @@ namespace Server
 					""id"": ""http://jsonschema.net/EnduranceTest/TestResults"",
 					""required"":true,
 					""properties"":{
-						""VO2Max"": {
+						""VO2MaxAbsolute"": {
 							""type"":""number"",
-							""id"": ""http://jsonschema.net/EnduranceTest/TestResults/VO2Max"",
+							""id"": ""http://jsonschema.net/EnduranceTest/TestResults/VO2MaxAbsolute"",
+							""required"":true
+						},
+                        ""VO2MaxRelative"": {
+							""type"":""number"",
+							""id"": ""http://jsonschema.net/EnduranceTest/TestResults/VO2MaxRelative"",
 							""required"":true
 						}
 					}

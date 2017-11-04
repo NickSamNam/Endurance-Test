@@ -106,11 +106,10 @@
         /// <param name="power">The power at which the patient cycled during the test in watts.</param>
         /// <param name="avgHR">The patient's average heart rate in beats per minute.</param>
         /// <returns></returns>
-        public static double CalcVO2MaxRelative(Patient patient, int power, int avgHR)
-        {
-            var calc = CalcVO2MaxAbsolute(patient, power, avgHR);
-            calc *= 1000 / patient.Mass;
-            return calc;
-        }
+        public static double CalcVO2MaxRelative(Patient patient, int power, int avgHR) =>
+            CalcVO2MaxRelative(patient, CalcVO2MaxAbsolute(patient, power, avgHR));
+
+        public static double CalcVO2MaxRelative(Patient patient, double VO2MaxAbsolute) =>
+            VO2MaxAbsolute *= 1000 / patient.Mass;
     }
 }
