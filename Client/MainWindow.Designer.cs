@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.cb_ports = new System.Windows.Forms.ComboBox();
             this.bt_connect = new System.Windows.Forms.Button();
             this.pn_connect = new System.Windows.Forms.Panel();
@@ -70,6 +70,7 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.nud_weight = new System.Windows.Forms.NumericUpDown();
+            this.lb_rpm_tip = new System.Windows.Forms.Label();
             this.pn_connect.SuspendLayout();
             this.pn_patient.SuspendLayout();
             this.pn_test.SuspendLayout();
@@ -258,6 +259,7 @@
             // 
             // pn_test
             // 
+            this.pn_test.Controls.Add(this.lb_rpm_tip);
             this.pn_test.Controls.Add(this.lb_actual_power);
             this.pn_test.Controls.Add(this.label13);
             this.pn_test.Controls.Add(this.lb_cycle_check);
@@ -283,29 +285,29 @@
             // ch_data
             // 
             this.ch_data.BackColor = System.Drawing.Color.Transparent;
-            chartArea1.Name = "ChartArea1";
-            this.ch_data.ChartAreas.Add(chartArea1);
-            legend1.BackColor = System.Drawing.Color.Transparent;
-            legend1.Name = "Legend1";
-            this.ch_data.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.ch_data.ChartAreas.Add(chartArea2);
+            legend2.BackColor = System.Drawing.Color.Transparent;
+            legend2.Name = "Legend1";
+            this.ch_data.Legends.Add(legend2);
             this.ch_data.Location = new System.Drawing.Point(-13, 130);
             this.ch_data.Name = "ch_data";
             this.ch_data.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.Legend = "Legend1";
-            series1.Name = "Power";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.Legend = "Legend1";
-            series2.Name = "Heartrate";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series3.Legend = "Legend1";
-            series3.Name = "RPM";
-            this.ch_data.Series.Add(series1);
-            this.ch_data.Series.Add(series2);
-            this.ch_data.Series.Add(series3);
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series4.Legend = "Legend1";
+            series4.Name = "Power";
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series5.Legend = "Legend1";
+            series5.Name = "Heartrate";
+            series6.ChartArea = "ChartArea1";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series6.Legend = "Legend1";
+            series6.Name = "RPM";
+            this.ch_data.Series.Add(series4);
+            this.ch_data.Series.Add(series5);
+            this.ch_data.Series.Add(series6);
             this.ch_data.Size = new System.Drawing.Size(499, 212);
             this.ch_data.TabIndex = 14;
             this.ch_data.Text = "chart1";
@@ -323,7 +325,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(45, 93);
+            this.label10.Location = new System.Drawing.Point(36, 93);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(116, 17);
             this.label10.TabIndex = 12;
@@ -332,7 +334,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(45, 67);
+            this.label6.Location = new System.Drawing.Point(36, 67);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(94, 17);
             this.label6.TabIndex = 11;
@@ -351,7 +353,7 @@
             // lb_power
             // 
             this.lb_power.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_power.Location = new System.Drawing.Point(230, 450);
+            this.lb_power.Location = new System.Drawing.Point(230, 456);
             this.lb_power.Name = "lb_power";
             this.lb_power.Size = new System.Drawing.Size(100, 23);
             this.lb_power.TabIndex = 9;
@@ -361,7 +363,7 @@
             // lb_hr
             // 
             this.lb_hr.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_hr.Location = new System.Drawing.Point(230, 419);
+            this.lb_hr.Location = new System.Drawing.Point(230, 425);
             this.lb_hr.Name = "lb_hr";
             this.lb_hr.Size = new System.Drawing.Size(100, 23);
             this.lb_hr.TabIndex = 8;
@@ -371,7 +373,7 @@
             // lb_rpm
             // 
             this.lb_rpm.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_rpm.Location = new System.Drawing.Point(230, 391);
+            this.lb_rpm.Location = new System.Drawing.Point(230, 397);
             this.lb_rpm.Name = "lb_rpm";
             this.lb_rpm.Size = new System.Drawing.Size(100, 23);
             this.lb_rpm.TabIndex = 7;
@@ -381,7 +383,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(45, 450);
+            this.label9.Location = new System.Drawing.Point(36, 456);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(119, 17);
             this.label9.TabIndex = 6;
@@ -390,7 +392,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(45, 419);
+            this.label8.Location = new System.Drawing.Point(36, 425);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(68, 17);
             this.label8.TabIndex = 5;
@@ -399,7 +401,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(45, 391);
+            this.label7.Location = new System.Drawing.Point(36, 397);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(38, 17);
             this.label7.TabIndex = 4;
@@ -420,7 +422,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(45, 20);
+            this.label11.Location = new System.Drawing.Point(36, 20);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(152, 17);
             this.label11.TabIndex = 15;
@@ -430,9 +432,9 @@
             // 
             this.lb_cycle_check.BackColor = System.Drawing.Color.Red;
             this.lb_cycle_check.ForeColor = System.Drawing.Color.White;
-            this.lb_cycle_check.Location = new System.Drawing.Point(48, 353);
+            this.lb_cycle_check.Location = new System.Drawing.Point(36, 345);
             this.lb_cycle_check.Name = "lb_cycle_check";
-            this.lb_cycle_check.Size = new System.Drawing.Size(282, 23);
+            this.lb_cycle_check.Size = new System.Drawing.Size(294, 23);
             this.lb_cycle_check.TabIndex = 16;
             this.lb_cycle_check.Text = "Cycle faster!";
             this.lb_cycle_check.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -440,7 +442,7 @@
             // lb_actual_power
             // 
             this.lb_actual_power.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_actual_power.Location = new System.Drawing.Point(230, 480);
+            this.lb_actual_power.Location = new System.Drawing.Point(230, 486);
             this.lb_actual_power.Name = "lb_actual_power";
             this.lb_actual_power.Size = new System.Drawing.Size(100, 23);
             this.lb_actual_power.TabIndex = 18;
@@ -450,7 +452,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(45, 480);
+            this.label13.Location = new System.Drawing.Point(36, 486);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(89, 17);
             this.label13.TabIndex = 17;
@@ -481,6 +483,17 @@
             this.nud_weight.Name = "nud_weight";
             this.nud_weight.Size = new System.Drawing.Size(282, 22);
             this.nud_weight.TabIndex = 14;
+            // 
+            // lb_rpm_tip
+            // 
+            this.lb_rpm_tip.AutoSize = true;
+            this.lb_rpm_tip.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_rpm_tip.Location = new System.Drawing.Point(46, 368);
+            this.lb_rpm_tip.Name = "lb_rpm_tip";
+            this.lb_rpm_tip.Size = new System.Drawing.Size(274, 17);
+            this.lb_rpm_tip.TabIndex = 19;
+            this.lb_rpm_tip.Text = "Try keeping your RPM between 50 and 60";
+            this.lb_rpm_tip.Visible = false;
             // 
             // MainWindow
             // 
@@ -545,6 +558,7 @@
         private System.Windows.Forms.NumericUpDown nud_weight;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label lb_rpm_tip;
     }
 }
 

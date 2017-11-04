@@ -26,6 +26,10 @@ namespace Client
             {
                 cb_ports.Items.Add(port);
             }
+
+            ch_data.Series["Power"].Points.Clear();
+            ch_data.Series["RPM"].Points.Clear();
+            ch_data.Series["Heartrate"].Points.Clear();
         }
 
         /// <summary>
@@ -160,21 +164,35 @@ namespace Client
                 lb_actual_power.Text = actualpower.ToString();
 
                 UpdateCycleCheck(rpm);
+                AddToChart(rpm,hr,power,time);
             }));
         }
 
         private void UpdateCycleCheck(int rpm) {
-            lb_cycle_check.BackColor = Color.Red;
-
             if (rpm < 50)
+            {
                 lb_cycle_check.Text = "Cycle faster!";
+                lb_cycle_check.BackColor = Color.Red;
+                lb_rpm_tip.Visible = true;
+            }
             else if (rpm > 60)
+            {
                 lb_cycle_check.Text = "Cycle slower!";
+                lb_cycle_check.BackColor = Color.Red;
+                lb_rpm_tip.Visible = true;
+            }
             else
             {
                 lb_cycle_check.Text = "Perfect cycle speed!";
                 lb_cycle_check.BackColor = Color.LawnGreen;
+                lb_rpm_tip.Visible = false;
             }
+        }
+
+        private void AddToChart(int rpm, int hr, int power, TimeSpan time) {
+            ch_data.Series["Power"].Points.AddXY(time.ToString(), power);
+            ch_data.Series["Heartrate"].Points.AddXY(time.ToString(), hr);
+            ch_data.Series["RPM"].Points.AddXY(time.ToString(), rpm);
         }
     }
 }
