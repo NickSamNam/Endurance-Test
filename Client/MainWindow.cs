@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -143,14 +144,24 @@ namespace Client
             }
         }
 
-        public void OnStateChanged(string state)
+        public void OnStateChanged(string state, int time)
         {
             lb_state.Invoke(new Action(() => lb_state.Text = state));
-
+            StartTimer(TimeSpan.FromMilliseconds(time));
             if (state == "NO")
             {
                 lb_state.Invoke(new Action(() => lb_state.Text = "Test is done!"));
             }
+        }
+
+        private void StartTimer(TimeSpan time) {
+            new Thread(() => {
+                while (time.TotalSeconds > 0) {
+                    time.Subtract(TimeSpan.FromSeconds(1));
+                    lb_time_left.Invoke(new Action(() => lb_time_left.Text = time.ToString(@"mm\:ss")));
+                    Thread.Sleep(1000);
+                }
+            }).Start();
         }
 
         public void OnErgometerDataReceived(int rpm, int hr, int power, int actualpower, TimeSpan time)

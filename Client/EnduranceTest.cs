@@ -60,7 +60,7 @@ namespace Client
                 Thread.Sleep(1000);
                 _hRs = new List<int>();
                 CurrentState = TestState.Warmup;
-                _listener.OnStateChanged(CurrentState.ToString());
+                _listener.OnStateChanged(CurrentState.ToString(), 120000);
                 _ergometer.RequestedPower = 50;
 
                 var stateTimer = new Timer();
@@ -97,6 +97,7 @@ namespace Client
                 int power = 0;
 
                 var warmup = false;
+                var test = false;
                 var endtest = false;
                 var cooldown = false;
                 while (CurrentState != TestState.No)
@@ -111,8 +112,13 @@ namespace Client
                             }
                             break;
                         case TestState.Test:
-                            warmupTimer.Stop();
-                            power = _ergometer.RequestedPower;
+                            if (!test)
+                            {
+                                _listener.OnStateChanged(CurrentState.ToString(), 240000);
+                                warmupTimer.Stop();
+                                power = _ergometer.RequestedPower;
+                                test = true;
+                            }
                             break;
                         case TestState.EndTest:
                             if (!endtest)
@@ -124,6 +130,7 @@ namespace Client
                         case TestState.Cooldown:
                             if (!cooldown)
                             {
+                                _listener.OnStateChanged(CurrentState.ToString(), 60000);
                                 stateTimer.Interval = 60000;
                                 testTimer.Stop();
                                 cooldownTimer.Start();
@@ -219,8 +226,6 @@ namespace Client
                     CurrentState = TestState.No;
                     break;
             }
-
-            _listener.OnStateChanged(CurrentState.ToString());
 
             Debug.WriteLine(CurrentState.ToString());
         }

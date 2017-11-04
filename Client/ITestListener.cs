@@ -8,6 +8,6 @@ namespace Client
 {
     public interface ITestListener
     {
-        void OnStateChanged(string state);
+        void OnStateChanged(string state, int time);
     }
 }
