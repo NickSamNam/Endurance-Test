@@ -91,7 +91,8 @@ namespace Client
                     tb_first_name.Text,
                     tb_last_name.Text,
                     dtp_birthdate.MinDate,
-                    rb_gender_male.Checked
+                    rb_gender_male.Checked,
+                    60
                 )
             );
         }

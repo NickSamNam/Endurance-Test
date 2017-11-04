@@ -50,6 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnduranceTest.cs" />
+    <Compile Include="EnduranceTestExceptions\EnduranceTestException.cs" />
+    <Compile Include="EnduranceTestExceptions\MinHRNotReachedException.cs" />
+    <Compile Include="EnduranceTestExceptions\MaxHRReachedException.cs" />
+    <Compile Include="EnduranceTestExceptions\SteadyStateUnreachableException.cs" />
     <Compile Include="Ergometer.cs" />
     <Compile Include="ITestListener.cs" />
     <Compile Include="Log.cs">

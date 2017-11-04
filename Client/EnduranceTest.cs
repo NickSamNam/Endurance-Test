@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
+using Client.EnduranceTestExceptions;
 
 namespace Client
 {
@@ -34,6 +36,7 @@ namespace Client
         private double[] _values;
         private List<int> _hRs = new List<int>();
 
+        private EnduranceTestException _exceptionInTimer;
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="EnduranceTest" /> class.
@@ -54,99 +57,112 @@ namespace Client
         /// <returns>Returns the test results.</returns>
         public async Task<JObject> StartAsync()
         {
-            var results = await Task.Run(() =>
+            double? vO2Max = null;
+            try
             {
-                _ergometer.Reset();
-                Thread.Sleep(1000);
-                _hRs = new List<int>();
-                CurrentState = TestState.Warmup;
-                _listener.OnStateChanged(CurrentState.ToString());
-                _ergometer.RequestedPower = 50;
-
-                var stateTimer = new Timer();
-                stateTimer.Elapsed += ChangeState;
-                stateTimer.Interval = 120000;
-                stateTimer.Start();
-
-                double[] prevValue = _ageValues[0];
-                foreach (double[] values in _ageValues)
+                var results = await Task.Run(() =>
                 {
-                    if (values[0] > _patient.Age)
-                        _values = prevValue;
-                    prevValue = values;
-                }
+                    _ergometer.Reset();
+                    Thread.Sleep(1000);
+                    _hRs = new List<int>();
+                    CurrentState = TestState.Warmup;
+                    _listener.OnStateChanged(CurrentState.ToString());
+                    _ergometer.RequestedPower = 50;
 
-                if (_values == null)
-                {
-                    _values = _ageValues[_ageValues.Length - 1];
-                }
+                    var stateTimer = new Timer();
+                    stateTimer.Elapsed += ChangeState;
+                    stateTimer.Interval = 120000;
+                    stateTimer.Start();
 
-                int[] hRs = new int[8];
-                var warmupTimer = new Timer();
-                warmupTimer.Interval = 15000;
-                warmupTimer.Elapsed += WarmupTimerElapsed;
-
-                var testTimer = new Timer();
-                testTimer.Interval = 15000;
-                testTimer.Elapsed += EndTestTimerElapsed;
-
-                var cooldownTimer = new Timer();
-                cooldownTimer.Interval = 5000;
-                cooldownTimer.Elapsed += CooldownTimerElapsed;
-
-                int power = 0;
-
-                var warmup = false;
-                var endtest = false;
-                var cooldown = false;
-                while (CurrentState != TestState.No)
-                {
-                    switch (CurrentState)
+                    double[] prevValue = _ageValues[0];
+                    foreach (double[] values in _ageValues)
                     {
-                        case TestState.Warmup:
-                            if (!warmup)
-                            {
-                                warmupTimer.Start();
-                                warmup = true;
-                            }
-                            break;
-                        case TestState.Test:
-                            warmupTimer.Stop();
-                            power = _ergometer.RequestedPower;
-                            break;
-                        case TestState.EndTest:
-                            if (!endtest)
-                            {
-                                testTimer.Start();
-                                endtest = true;
-                            }
-                            break;
-                        case TestState.Cooldown:
-                            if (!cooldown)
-                            {
-                                stateTimer.Interval = 60000;
-                                testTimer.Stop();
-                                cooldownTimer.Start();
-                                cooldown = true;
-                            }
-                            break;
+                        if (values[0] > _patient.Age)
+                            _values = prevValue;
+                        prevValue = values;
                     }
-                }
-                cooldownTimer.Stop();
-                stateTimer.Stop();
-                _ergometer.Close();
 
-                if (_hRs.Min() >= 130 && _hRs.Max() <= _patient.MaxHeartRate && _hRs.Max() - _hRs.Min() <= 5)
-                {
+                    if (_values == null)
+                    {
+                        _values = _ageValues[_ageValues.Length - 1];
+                    }
+
+                    int[] hRs = new int[8];
+                    var warmupTimer = new Timer();
+                    warmupTimer.Interval = 15000;
+                    warmupTimer.Elapsed += WarmupTimerElapsed;
+
+                    var testTimer = new Timer();
+                    testTimer.Interval = 15000;
+                    testTimer.Elapsed += EndTestTimerElapsed;
+
+                    var cooldownTimer = new Timer();
+                    cooldownTimer.Interval = 5000;
+                    cooldownTimer.Elapsed += CooldownTimerElapsed;
+
+                    int power = 0;
+
+                    var warmup = false;
+                    var endtest = false;
+                    var cooldown = false;
+                    while (CurrentState != TestState.No)
+                    {
+                        if (_exceptionInTimer != null)
+                        {
+                            throw _exceptionInTimer;
+                        }
+                        switch (CurrentState)
+                        {
+                            case TestState.Warmup:
+                                if (!warmup)
+                                {
+                                    warmupTimer.Start();
+                                    warmup = true;
+                                }
+                                break;
+                            case TestState.Test:
+                                warmupTimer.Stop();
+                                power = _ergometer.RequestedPower;
+                                break;
+                            case TestState.EndTest:
+                                if (!endtest)
+                                {
+                                    testTimer.Start();
+                                    endtest = true;
+                                }
+                                break;
+                            case TestState.Cooldown:
+                                if (!cooldown)
+                                {
+                                    stateTimer.Interval = 60000;
+                                    testTimer.Stop();
+                                    cooldownTimer.Start();
+                                    cooldown = true;
+                                }
+                                break;
+                        }
+                    }
+                    cooldownTimer.Stop();
+                    stateTimer.Stop();
+                    _ergometer.Close();
+
                     return Tuple.Create(Convert.ToInt32(_hRs.Average()), power);
-                }
-                return null;
-            });
-
-            if (results == null) return null;
-
+                });
+                vO2Max = Nomogram.CalcVO2MaxAbsolute(_patient, results.Item2, results.Item1);
+            }
+            catch (MaxHRReachedException)
+            {
+                new Thread(() => MessageBox.Show("Maximum heartrate exceeded!", "Test failed.")).Start();
+            }
+            catch (MinHRNotReachedException)
+            {
+                new Thread(() => MessageBox.Show("Heartrate did not reach 130 BPM", "Test failed.")).Start();
+            }
+            catch (SteadyStateUnreachableException)
+            {
+                new Thread(() => MessageBox.Show("Heartrate too irregular.", "Test failed.")).Start();
+            }
             var ergometerLog = _ergometer.Log;
-            var vO2Max = Nomogram.CalcVO2MaxAbsolute(_patient, results.Item2, results.Item1);
             return new JObject
             {
                 {
@@ -163,7 +179,7 @@ namespace Client
                         {
                             "TestResults", new JObject
                             {
-                                {"VO2Max", vO2Max}
+                                {"VO2Max", vO2Max ?? double.NaN}
                             }
                         },
                         {
@@ -197,6 +213,18 @@ namespace Client
         private void EndTestTimerElapsed(object source, ElapsedEventArgs e)
         {
             _hRs.Add(_ergometer.HR);
+            if (_hRs.Max() > _patient.MaxHeartRate)
+            {
+                _exceptionInTimer = new MaxHRReachedException();
+            }
+            else if (_hRs.Min() < 130)
+            {
+                _exceptionInTimer = new MinHRNotReachedException();
+            }
+            else if (_hRs.Max() - _hRs.Min() > 5)
+            {
+                _exceptionInTimer = new SteadyStateUnreachableException();
+            }
         }
 
         /// <summary>
