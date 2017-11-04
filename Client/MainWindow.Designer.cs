@@ -63,6 +63,8 @@
             this.lb_state = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.lb_cycle_check = new System.Windows.Forms.Label();
+            this.lb_actual_power = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             this.pn_connect.SuspendLayout();
             this.pn_patient.SuspendLayout();
             this.pn_test.SuspendLayout();
@@ -247,6 +249,8 @@
             // 
             // pn_test
             // 
+            this.pn_test.Controls.Add(this.lb_actual_power);
+            this.pn_test.Controls.Add(this.label13);
             this.pn_test.Controls.Add(this.lb_cycle_check);
             this.pn_test.Controls.Add(this.label11);
             this.pn_test.Controls.Add(this.ch_data);
@@ -359,9 +363,9 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(45, 450);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(47, 17);
+            this.label9.Size = new System.Drawing.Size(119, 17);
             this.label9.TabIndex = 6;
-            this.label9.Text = "Power";
+            this.label9.Text = "Requested power";
             // 
             // label8
             // 
@@ -412,6 +416,25 @@
             this.lb_cycle_check.TabIndex = 16;
             this.lb_cycle_check.Text = "Cycle faster!";
             this.lb_cycle_check.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lb_actual_power
+            // 
+            this.lb_actual_power.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_actual_power.Location = new System.Drawing.Point(230, 480);
+            this.lb_actual_power.Name = "lb_actual_power";
+            this.lb_actual_power.Size = new System.Drawing.Size(100, 23);
+            this.lb_actual_power.TabIndex = 18;
+            this.lb_actual_power.Text = "0";
+            this.lb_actual_power.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(45, 480);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(89, 17);
+            this.label13.TabIndex = 17;
+            this.label13.Text = "Actual power";
             // 
             // MainWindow
             // 
@@ -470,6 +493,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label lb_cycle_check;
+        private System.Windows.Forms.Label lb_actual_power;
+        private System.Windows.Forms.Label label13;
     }
 }
 

@@ -148,7 +148,7 @@ namespace Client
             }
         }
 
-        public void OnErgometerDataReceived(int rpm, int hr, int power, TimeSpan time)
+        public void OnErgometerDataReceived(int rpm, int hr, int power, int actualpower, TimeSpan time)
         {
             this.Invoke(new MethodInvoker(() =>
             {
@@ -156,6 +156,7 @@ namespace Client
                 lb_hr.Text = hr.ToString();
                 lb_power.Text = power.ToString();
                 lb_time.Text = time.ToString(@"mm\:ss");
+                lb_actual_power.Text = actualpower.ToString();
 
                 UpdateCycleCheck(rpm);
             }));

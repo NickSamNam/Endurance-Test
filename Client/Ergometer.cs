@@ -7,7 +7,7 @@ using System.Timers;
 namespace Client
 {
     public interface IErgometerListener {
-        void OnErgometerDataReceived(int rpm, int hr, int power, TimeSpan time);
+        void OnErgometerDataReceived(int rpm, int hr, int power, int actualpower, TimeSpan time);
     }
 
     public class Ergometer
@@ -148,7 +148,7 @@ namespace Client
                                                 int.Parse(dataSt[6].Split(':')[1]));
                     ActualPower = int.Parse(dataSt[7]);
 
-                    _listener.OnErgometerDataReceived(RPM, HR, RequestedPower, Time);
+                    _listener.OnErgometerDataReceived(RPM, HR, RequestedPower, ActualPower, Time);
 
                     if (Log.Count == 0 || Log.Last?["Time"] != null && Time.TotalSeconds - Log.Last["Time"].ToObject<int>() >= 5)
                     {
