@@ -31,6 +31,8 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.cb_ports = new System.Windows.Forms.ComboBox();
             this.bt_connect = new System.Windows.Forms.Button();
             this.pn_connect = new System.Windows.Forms.Panel();
@@ -65,10 +67,14 @@
             this.lb_cycle_check = new System.Windows.Forms.Label();
             this.lb_actual_power = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.nud_weight = new System.Windows.Forms.NumericUpDown();
             this.pn_connect.SuspendLayout();
             this.pn_patient.SuspendLayout();
             this.pn_test.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ch_data)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_weight)).BeginInit();
             this.SuspendLayout();
             // 
             // cb_ports
@@ -99,7 +105,7 @@
             this.pn_connect.Controls.Add(this.label1);
             this.pn_connect.Controls.Add(this.bt_connect);
             this.pn_connect.Controls.Add(this.cb_ports);
-            this.pn_connect.Location = new System.Drawing.Point(0, 3);
+            this.pn_connect.Location = new System.Drawing.Point(0, 1);
             this.pn_connect.Margin = new System.Windows.Forms.Padding(4);
             this.pn_connect.Name = "pn_connect";
             this.pn_connect.Size = new System.Drawing.Size(477, 532);
@@ -143,6 +149,9 @@
             // 
             // pn_patient
             // 
+            this.pn_patient.Controls.Add(this.nud_weight);
+            this.pn_patient.Controls.Add(this.label14);
+            this.pn_patient.Controls.Add(this.label12);
             this.pn_patient.Controls.Add(this.label4);
             this.pn_patient.Controls.Add(this.dtp_birthdate);
             this.pn_patient.Controls.Add(this.rb_gender_female);
@@ -161,7 +170,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(87, 281);
+            this.label4.Location = new System.Drawing.Point(87, 339);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(69, 17);
@@ -170,7 +179,7 @@
             // 
             // dtp_birthdate
             // 
-            this.dtp_birthdate.Location = new System.Drawing.Point(91, 304);
+            this.dtp_birthdate.Location = new System.Drawing.Point(91, 362);
             this.dtp_birthdate.Margin = new System.Windows.Forms.Padding(4);
             this.dtp_birthdate.Name = "dtp_birthdate";
             this.dtp_birthdate.Size = new System.Drawing.Size(319, 22);
@@ -179,7 +188,7 @@
             // rb_gender_female
             // 
             this.rb_gender_female.AutoSize = true;
-            this.rb_gender_female.Location = new System.Drawing.Point(91, 229);
+            this.rb_gender_female.Location = new System.Drawing.Point(91, 287);
             this.rb_gender_female.Margin = new System.Windows.Forms.Padding(4);
             this.rb_gender_female.Name = "rb_gender_female";
             this.rb_gender_female.Size = new System.Drawing.Size(75, 21);
@@ -191,7 +200,7 @@
             // rb_gender_male
             // 
             this.rb_gender_male.AutoSize = true;
-            this.rb_gender_male.Location = new System.Drawing.Point(91, 201);
+            this.rb_gender_male.Location = new System.Drawing.Point(91, 259);
             this.rb_gender_male.Margin = new System.Windows.Forms.Padding(4);
             this.rb_gender_male.Name = "rb_gender_male";
             this.rb_gender_male.Size = new System.Drawing.Size(59, 21);
@@ -238,7 +247,7 @@
             // 
             // btn_start
             // 
-            this.btn_start.Location = new System.Drawing.Point(151, 379);
+            this.btn_start.Location = new System.Drawing.Point(151, 437);
             this.btn_start.Margin = new System.Windows.Forms.Padding(4);
             this.btn_start.Name = "btn_start";
             this.btn_start.Size = new System.Drawing.Size(179, 39);
@@ -265,7 +274,7 @@
             this.pn_test.Controls.Add(this.label8);
             this.pn_test.Controls.Add(this.label7);
             this.pn_test.Controls.Add(this.lb_state);
-            this.pn_test.Location = new System.Drawing.Point(0, 1);
+            this.pn_test.Location = new System.Drawing.Point(0, 0);
             this.pn_test.Margin = new System.Windows.Forms.Padding(4);
             this.pn_test.Name = "pn_test";
             this.pn_test.Size = new System.Drawing.Size(477, 532);
@@ -281,12 +290,23 @@
             this.ch_data.Legends.Add(legend1);
             this.ch_data.Location = new System.Drawing.Point(-13, 130);
             this.ch_data.Name = "ch_data";
+            this.ch_data.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
             series1.Legend = "Legend1";
-            series1.Name = "Series1";
+            series1.Name = "Power";
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.Legend = "Legend1";
+            series2.Name = "Heartrate";
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series3.Legend = "Legend1";
+            series3.Name = "RPM";
             this.ch_data.Series.Add(series1);
-            this.ch_data.Size = new System.Drawing.Size(490, 212);
+            this.ch_data.Series.Add(series2);
+            this.ch_data.Series.Add(series3);
+            this.ch_data.Size = new System.Drawing.Size(499, 212);
             this.ch_data.TabIndex = 14;
             this.ch_data.Text = "chart1";
             // 
@@ -436,11 +456,37 @@
             this.label13.TabIndex = 17;
             this.label13.Text = "Actual power";
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(88, 194);
+            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(52, 17);
+            this.label12.TabIndex = 12;
+            this.label12.Text = "Weight";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(382, 219);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(28, 17);
+            this.label14.TabIndex = 13;
+            this.label14.Text = "KG";
+            // 
+            // nud_weight
+            // 
+            this.nud_weight.Location = new System.Drawing.Point(90, 214);
+            this.nud_weight.Name = "nud_weight";
+            this.nud_weight.Size = new System.Drawing.Size(282, 22);
+            this.nud_weight.TabIndex = 14;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(478, 535);
+            this.ClientSize = new System.Drawing.Size(478, 533);
             this.Controls.Add(this.pn_test);
             this.Controls.Add(this.pn_connect);
             this.Controls.Add(this.pn_patient);
@@ -455,6 +501,7 @@
             this.pn_test.ResumeLayout(false);
             this.pn_test.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ch_data)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_weight)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -495,6 +542,9 @@
         private System.Windows.Forms.Label lb_cycle_check;
         private System.Windows.Forms.Label lb_actual_power;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.NumericUpDown nud_weight;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label12;
     }
 }
 

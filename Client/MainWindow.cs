@@ -92,6 +92,7 @@ namespace Client
                     tb_first_name.Text,
                     tb_last_name.Text,
                     dtp_birthdate.MinDate,
+                    (int)nud_weight.Value,
                     rb_gender_male.Checked
                 )
             );

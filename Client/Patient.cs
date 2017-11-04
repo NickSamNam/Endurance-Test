@@ -33,6 +33,11 @@ namespace Client
         public DateTime Birthdate { get; }
 
         /// <summary>
+        ///   Gets the Weight in KG of the patient.
+        /// </summary>
+        public int Weight { get; }
+
+        /// <summary>
         ///   Gets the gender of the patient.
         /// </summary>
         public bool IsMale { get; }
@@ -69,11 +74,12 @@ namespace Client
         /// <param name="lastName">The patient's last name.</param>
         /// <param name="birthdate">The patient's birthdate.</param>
         /// <param name="isMale">The patient's gender.</param>
-        public Patient(string firstName, string lastName, DateTime birthdate, bool isMale)
+        public Patient(string firstName, string lastName, DateTime birthdate, int weight, bool isMale)
         {
             FirstName = firstName;
             LastName = lastName;
             Birthdate = birthdate;
+            Weight = weight;
             IsMale = isMale;
         }
 
