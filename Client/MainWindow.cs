@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO.Ports;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -155,7 +156,23 @@ namespace Client
                 lb_hr.Text = hr.ToString();
                 lb_power.Text = power.ToString();
                 lb_time.Text = time.ToString(@"mm\:ss");
+
+                UpdateCycleCheck(rpm);
             }));
+        }
+
+        private void UpdateCycleCheck(int rpm) {
+            lb_cycle_check.BackColor = Color.Red;
+
+            if (rpm < 50)
+                lb_cycle_check.Text = "Cycle faster!";
+            else if (rpm > 60)
+                lb_cycle_check.Text = "Cycle slower!";
+            else
+            {
+                lb_cycle_check.Text = "Perfect cycle speed!";
+                lb_cycle_check.BackColor = Color.LawnGreen;
+            }
         }
     }
 }

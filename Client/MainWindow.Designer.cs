@@ -28,6 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.cb_ports = new System.Windows.Forms.ComboBox();
             this.bt_connect = new System.Windows.Forms.Button();
             this.pn_connect = new System.Windows.Forms.Panel();
@@ -46,18 +49,24 @@
             this.tb_first_name = new System.Windows.Forms.TextBox();
             this.btn_start = new System.Windows.Forms.Button();
             this.pn_test = new System.Windows.Forms.Panel();
-            this.lb_state = new System.Windows.Forms.Label();
+            this.ch_data = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.lb_time_left = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.lb_rpm = new System.Windows.Forms.Label();
-            this.lb_hr = new System.Windows.Forms.Label();
-            this.lb_power = new System.Windows.Forms.Label();
             this.lb_time = new System.Windows.Forms.Label();
+            this.lb_power = new System.Windows.Forms.Label();
+            this.lb_hr = new System.Windows.Forms.Label();
+            this.lb_rpm = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lb_state = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lb_cycle_check = new System.Windows.Forms.Label();
             this.pn_connect.SuspendLayout();
             this.pn_patient.SuspendLayout();
             this.pn_test.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ch_data)).BeginInit();
             this.SuspendLayout();
             // 
             // cb_ports
@@ -238,6 +247,12 @@
             // 
             // pn_test
             // 
+            this.pn_test.Controls.Add(this.lb_cycle_check);
+            this.pn_test.Controls.Add(this.label11);
+            this.pn_test.Controls.Add(this.ch_data);
+            this.pn_test.Controls.Add(this.lb_time_left);
+            this.pn_test.Controls.Add(this.label10);
+            this.pn_test.Controls.Add(this.label6);
             this.pn_test.Controls.Add(this.lb_time);
             this.pn_test.Controls.Add(this.lb_power);
             this.pn_test.Controls.Add(this.lb_hr);
@@ -245,7 +260,6 @@
             this.pn_test.Controls.Add(this.label9);
             this.pn_test.Controls.Add(this.label8);
             this.pn_test.Controls.Add(this.label7);
-            this.pn_test.Controls.Add(this.label6);
             this.pn_test.Controls.Add(this.lb_state);
             this.pn_test.Location = new System.Drawing.Point(0, 1);
             this.pn_test.Margin = new System.Windows.Forms.Padding(4);
@@ -253,94 +267,151 @@
             this.pn_test.Size = new System.Drawing.Size(477, 532);
             this.pn_test.TabIndex = 11;
             // 
-            // lb_state
+            // ch_data
             // 
-            this.lb_state.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_state.Location = new System.Drawing.Point(-2, 62);
-            this.lb_state.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lb_state.Name = "lb_state";
-            this.lb_state.Size = new System.Drawing.Size(479, 28);
-            this.lb_state.TabIndex = 2;
-            this.lb_state.Text = "state";
-            this.lb_state.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.ch_data.BackColor = System.Drawing.Color.Transparent;
+            chartArea1.Name = "ChartArea1";
+            this.ch_data.ChartAreas.Add(chartArea1);
+            legend1.BackColor = System.Drawing.Color.Transparent;
+            legend1.Name = "Legend1";
+            this.ch_data.Legends.Add(legend1);
+            this.ch_data.Location = new System.Drawing.Point(-13, 130);
+            this.ch_data.Name = "ch_data";
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.ch_data.Series.Add(series1);
+            this.ch_data.Size = new System.Drawing.Size(490, 212);
+            this.ch_data.TabIndex = 14;
+            this.ch_data.Text = "chart1";
+            // 
+            // lb_time_left
+            // 
+            this.lb_time_left.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_time_left.Location = new System.Drawing.Point(180, 93);
+            this.lb_time_left.Name = "lb_time_left";
+            this.lb_time_left.Size = new System.Drawing.Size(150, 25);
+            this.lb_time_left.TabIndex = 13;
+            this.lb_time_left.Text = "0:00";
+            this.lb_time_left.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(45, 93);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(116, 17);
+            this.label10.TabIndex = 12;
+            this.label10.Text = "Time left in state:";
             // 
             // label6
             // 
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(-2, 34);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(45, 67);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(479, 28);
-            this.label6.TabIndex = 3;
-            this.label6.Text = "Test in progress";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label6.Size = new System.Drawing.Size(94, 17);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "Current state:";
             // 
-            // label7
+            // lb_time
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(103, 176);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(38, 17);
-            this.label7.TabIndex = 4;
-            this.label7.Text = "RPM";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(103, 204);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(68, 17);
-            this.label8.TabIndex = 5;
-            this.label8.Text = "Heartrate";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(103, 235);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(47, 17);
-            this.label9.TabIndex = 6;
-            this.label9.Text = "Power";
-            // 
-            // lb_rpm
-            // 
-            this.lb_rpm.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_rpm.Location = new System.Drawing.Point(269, 176);
-            this.lb_rpm.Name = "lb_rpm";
-            this.lb_rpm.Size = new System.Drawing.Size(100, 23);
-            this.lb_rpm.TabIndex = 7;
-            this.lb_rpm.Text = "0";
-            this.lb_rpm.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // lb_hr
-            // 
-            this.lb_hr.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_hr.Location = new System.Drawing.Point(269, 204);
-            this.lb_hr.Name = "lb_hr";
-            this.lb_hr.Size = new System.Drawing.Size(100, 23);
-            this.lb_hr.TabIndex = 8;
-            this.lb_hr.Text = "0";
-            this.lb_hr.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lb_time.AutoSize = true;
+            this.lb_time.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_time.Location = new System.Drawing.Point(388, 67);
+            this.lb_time.Name = "lb_time";
+            this.lb_time.Size = new System.Drawing.Size(55, 20);
+            this.lb_time.TabIndex = 10;
+            this.lb_time.Text = "00:00";
             // 
             // lb_power
             // 
             this.lb_power.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_power.Location = new System.Drawing.Point(269, 235);
+            this.lb_power.Location = new System.Drawing.Point(230, 450);
             this.lb_power.Name = "lb_power";
             this.lb_power.Size = new System.Drawing.Size(100, 23);
             this.lb_power.TabIndex = 9;
             this.lb_power.Text = "0";
             this.lb_power.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // lb_time
+            // lb_hr
             // 
-            this.lb_time.AutoSize = true;
-            this.lb_time.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_time.Location = new System.Drawing.Point(210, 133);
-            this.lb_time.Name = "lb_time";
-            this.lb_time.Size = new System.Drawing.Size(55, 20);
-            this.lb_time.TabIndex = 10;
-            this.lb_time.Text = "00:00";
+            this.lb_hr.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_hr.Location = new System.Drawing.Point(230, 419);
+            this.lb_hr.Name = "lb_hr";
+            this.lb_hr.Size = new System.Drawing.Size(100, 23);
+            this.lb_hr.TabIndex = 8;
+            this.lb_hr.Text = "0";
+            this.lb_hr.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lb_rpm
+            // 
+            this.lb_rpm.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_rpm.Location = new System.Drawing.Point(230, 391);
+            this.lb_rpm.Name = "lb_rpm";
+            this.lb_rpm.Size = new System.Drawing.Size(100, 23);
+            this.lb_rpm.TabIndex = 7;
+            this.lb_rpm.Text = "0";
+            this.lb_rpm.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(45, 450);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(47, 17);
+            this.label9.TabIndex = 6;
+            this.label9.Text = "Power";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(45, 419);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(68, 17);
+            this.label8.TabIndex = 5;
+            this.label8.Text = "Heartrate";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(45, 391);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(38, 17);
+            this.label7.TabIndex = 4;
+            this.label7.Text = "RPM";
+            // 
+            // lb_state
+            // 
+            this.lb_state.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_state.Location = new System.Drawing.Point(183, 67);
+            this.lb_state.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_state.Name = "lb_state";
+            this.lb_state.Size = new System.Drawing.Size(147, 17);
+            this.lb_state.TabIndex = 2;
+            this.lb_state.Text = "state";
+            this.lb_state.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(45, 20);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(152, 17);
+            this.label11.TabIndex = 15;
+            this.label11.Text = "van Endhoven, Nick";
+            // 
+            // lb_cycle_check
+            // 
+            this.lb_cycle_check.BackColor = System.Drawing.Color.Red;
+            this.lb_cycle_check.ForeColor = System.Drawing.Color.White;
+            this.lb_cycle_check.Location = new System.Drawing.Point(48, 353);
+            this.lb_cycle_check.Name = "lb_cycle_check";
+            this.lb_cycle_check.Size = new System.Drawing.Size(282, 23);
+            this.lb_cycle_check.TabIndex = 16;
+            this.lb_cycle_check.Text = "Cycle faster!";
+            this.lb_cycle_check.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MainWindow
             // 
@@ -360,6 +431,7 @@
             this.pn_patient.PerformLayout();
             this.pn_test.ResumeLayout(false);
             this.pn_test.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ch_data)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -385,7 +457,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox tb_log;
         private System.Windows.Forms.Button btn_log;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label lb_power;
         private System.Windows.Forms.Label lb_hr;
@@ -393,6 +464,12 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label lb_time;
+        private System.Windows.Forms.DataVisualization.Charting.Chart ch_data;
+        private System.Windows.Forms.Label lb_time_left;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lb_cycle_check;
     }
 }
 
