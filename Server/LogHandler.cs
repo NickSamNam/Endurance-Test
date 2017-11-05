@@ -268,6 +268,16 @@ namespace Server
 							""type"":""number"",
 							""id"": ""http://jsonschema.net/EnduranceTest/TestResults/VO2MaxRelative"",
 							""required"":true
+						},
+                        ""Power"": {
+							""type"":""number"",
+							""id"": ""http://jsonschema.net/EnduranceTest/TestResults/Power"",
+							""required"":true
+						},
+                        ""HR"": {
+							""type"":""number"",
+							""id"": ""http://jsonschema.net/EnduranceTest/TestResults/HR"",
+							""required"":true
 						}
 					}
 				}

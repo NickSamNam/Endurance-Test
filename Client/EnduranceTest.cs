@@ -57,7 +57,7 @@ namespace Client
         /// <returns>Returns the test results.</returns>
         public async Task<JObject> StartAsync()
         {
-            double? vO2MaxAbs = null;
+            int? power = null, hr = null;
             try
             {
                 var results = await Task.Run(() =>
@@ -148,7 +148,8 @@ namespace Client
 
                     return Tuple.Create(Convert.ToInt32(_hRs.Average()), power);
                 });
-                vO2MaxAbs = Nomogram.CalcVO2MaxAbsolute(_patient, results.Item2, results.Item1);
+                power = results.Item2;
+                hr = results.Item1;
             }
             catch (MaxHRReachedException)
             {
@@ -163,14 +164,16 @@ namespace Client
                 new Thread(() => MessageBox.Show("Heartrate too irregular.", "Test failed.")).Start();
             }
             var ergometerLog = _ergometer.Log;
+            double vO2MaxAbs;
             double vO2MaxRel;
-            if (vO2MaxAbs == null)
+            if (power != null && hr != null)
             {
-                vO2MaxAbs = vO2MaxRel = double.NaN;
+                vO2MaxAbs = Nomogram.CalcVO2MaxAbsolute(_patient, (int) power, (int) hr);
+                vO2MaxRel = Nomogram.CalcVO2MaxRelative(_patient, vO2MaxAbs);
             }
             else
             {
-                vO2MaxRel = Nomogram.CalcVO2MaxRelative(_patient, (double) vO2MaxAbs);
+                vO2MaxAbs = vO2MaxRel = double.NaN;
             }
             return new JObject
             {
@@ -190,7 +193,9 @@ namespace Client
                             "TestResults", new JObject
                             {
                                 {"VO2MaxAbsolute", vO2MaxAbs},
-                                {"VO2MaxRelative", vO2MaxRel}
+                                {"VO2MaxRelative", vO2MaxRel},
+                                {"Power", power},
+                                {"HR", hr}
                             }
                         },
                         {
