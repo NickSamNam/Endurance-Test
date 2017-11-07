@@ -66,8 +66,8 @@ namespace Client
                     Thread.Sleep(1000);
                     _hRs = new List<int>();
                     CurrentState = TestState.Warmup;
-                _listener.OnStateChanged(CurrentState.ToString(), 120000);
-                _ergometer.RequestedPower = 50;
+                    _listener.OnStateChanged(CurrentState.ToString(), 120000);
+                    _ergometer.RequestedPower = 50;
 
                     var stateTimer = new Timer();
                     stateTimer.Elapsed += ChangeState;
@@ -87,10 +87,10 @@ namespace Client
                         _values = _ageValues[_ageValues.Length - 1];
                     }
 
-                int[] hRs = new int[8];
-                var pretestTimer = new Timer();
-                pretestTimer.Interval = 15000;
-                pretestTimer.Elapsed += WarmupTimerElapsed;
+                    int[] hRs = new int[8];
+                    var pretestTimer = new Timer();
+                    pretestTimer.Interval = 15000;
+                    pretestTimer.Elapsed += WarmupTimerElapsed;
 
                     var testTimer = new Timer();
                     testTimer.Interval = 15000;
@@ -102,47 +102,48 @@ namespace Client
 
                     int power = 0;
 
-                var test = false;
-                var endtest = false;
-                var cooldown = false;
-                while (CurrentState != TestState.No)
-                {
+                    var test = false;
+                    var endtest = false;
+                    var cooldown = false;
+                    while (CurrentState != TestState.No)
                     {
-                        if (_exceptionInTimer != null)
-                            throw _exceptionInTimer;
                         {
-                        }
-                        switch (CurrentState)
-                        {
-                        case TestState.Warmup:
-                            break;
-                        case TestState.Test:
-                            if (!test)
+                            if (_exceptionInTimer != null)
+                                throw _exceptionInTimer;
                             {
-                                _listener.OnStateChanged(CurrentState.ToString(), 240000);
-                                pretestTimer.Start();
-                                power = _ergometer.RequestedPower;
-                                test = true;
                             }
-                            break;
-                        case TestState.EndTest:
-                            if (!endtest)
+                            switch (CurrentState)
                             {
-                                pretestTimer.Stop();
-                                testTimer.Start();
-                                endtest = true;
+                                case TestState.Warmup:
+                                    break;
+                                case TestState.Test:
+                                    if (!test)
+                                    {
+                                        _listener.OnStateChanged(CurrentState.ToString(), 240000);
+                                        pretestTimer.Start();
+                                        power = _ergometer.RequestedPower;
+                                        test = true;
+                                    }
+                                    break;
+                                case TestState.EndTest:
+                                    if (!endtest)
+                                    {
+                                        pretestTimer.Stop();
+                                        testTimer.Start();
+                                        endtest = true;
+                                    }
+                                    break;
+                                case TestState.Cooldown:
+                                    if (!cooldown)
+                                    {
+                                        _listener.OnStateChanged(CurrentState.ToString(), 60000);
+                                        stateTimer.Interval = 60000;
+                                        testTimer.Stop();
+                                        cooldownTimer.Start();
+                                        cooldown = true;
+                                    }
+                                    break;
                             }
-                            break;
-                        case TestState.Cooldown:
-                            if (!cooldown)
-                            {
-                                _listener.OnStateChanged(CurrentState.ToString(), 60000);
-                                stateTimer.Interval = 60000;
-                                testTimer.Stop();
-                                cooldownTimer.Start();
-                                cooldown = true;
-                            }
-                            break;
                         }
                     }
                     cooldownTimer.Stop();

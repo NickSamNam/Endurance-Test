@@ -33,17 +33,12 @@ namespace Client
         public DateTime Birthdate { get; }
 
         /// <summary>
-        ///   Gets the Weight in KG of the patient.
-        /// </summary>
-        public int Weight { get; }
-
-        /// <summary>
         ///   Gets the gender of the patient.
         /// </summary>
         public bool IsMale { get; }
 
         /// <summary>
-        /// Gets the body mass of the patient.
+        /// Gets the body mass of the patient in kg.
         /// </summary>
         public double Mass { get; }
 
@@ -85,7 +80,6 @@ namespace Client
             FirstName = firstName;
             LastName = lastName;
             Birthdate = birthdate;
-            Weight = weight;
             IsMale = isMale;
             Mass = mass;
         }
