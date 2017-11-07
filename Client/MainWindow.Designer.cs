@@ -28,22 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-<<<<<<< Updated upstream
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
-=======
-<<<<<<< Updated upstream
-=======
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             this.cb_ports = new System.Windows.Forms.ComboBox();
             this.bt_connect = new System.Windows.Forms.Button();
             this.pn_connect = new System.Windows.Forms.Panel();
@@ -52,9 +41,6 @@
             this.btn_log = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.pn_patient = new System.Windows.Forms.Panel();
-            this.nud_weight = new System.Windows.Forms.NumericUpDown();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.dtp_birthdate = new System.Windows.Forms.DateTimePicker();
             this.rb_gender_female = new System.Windows.Forms.RadioButton();
@@ -65,7 +51,6 @@
             this.tb_first_name = new System.Windows.Forms.TextBox();
             this.btn_start = new System.Windows.Forms.Button();
             this.pn_test = new System.Windows.Forms.Panel();
-<<<<<<< Updated upstream
             this.ch_data = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.lb_time_left = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -85,44 +70,11 @@
             this.label14 = new System.Windows.Forms.Label();
             this.nud_weight = new System.Windows.Forms.NumericUpDown();
             this.lb_rpm_tip = new System.Windows.Forms.Label();
-=======
-<<<<<<< Updated upstream
-            this.lb_state = new System.Windows.Forms.Label();
-=======
-            this.lb_rpm_tip = new System.Windows.Forms.Label();
-            this.lb_actual_power = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.lb_cycle_check = new System.Windows.Forms.Label();
-            this.ch_data = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.lb_time_left = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
->>>>>>> Stashed changes
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-<<<<<<< Updated upstream
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.lb_rpm = new System.Windows.Forms.Label();
-            this.lb_hr = new System.Windows.Forms.Label();
-            this.lb_power = new System.Windows.Forms.Label();
-            this.lb_time = new System.Windows.Forms.Label();
-=======
-            this.lb_state = new System.Windows.Forms.Label();
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             this.pn_connect.SuspendLayout();
             this.pn_patient.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nud_weight)).BeginInit();
             this.pn_test.SuspendLayout();
-<<<<<<< Updated upstream
             ((System.ComponentModel.ISupportInitialize)(this.ch_data)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_weight)).BeginInit();
-=======
-<<<<<<< Updated upstream
-=======
-            ((System.ComponentModel.ISupportInitialize)(this.ch_data)).BeginInit();
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             this.SuspendLayout();
             // 
             // cb_ports
@@ -215,32 +167,6 @@
             this.pn_patient.Size = new System.Drawing.Size(477, 532);
             this.pn_patient.TabIndex = 3;
             // 
-            // nud_weight
-            // 
-            this.nud_weight.Location = new System.Drawing.Point(90, 214);
-            this.nud_weight.Name = "nud_weight";
-            this.nud_weight.Size = new System.Drawing.Size(282, 22);
-            this.nud_weight.TabIndex = 14;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(382, 219);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(28, 17);
-            this.label14.TabIndex = 13;
-            this.label14.Text = "KG";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(88, 194);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(52, 17);
-            this.label12.TabIndex = 12;
-            this.label12.Text = "Weight";
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -249,7 +175,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(69, 17);
             this.label4.TabIndex = 10;
-            this.label4.Text = "Birthdate";
+            this.label4.Text = "Birth date";
             // 
             // dtp_birthdate
             // 
@@ -354,7 +280,6 @@
             this.pn_test.Size = new System.Drawing.Size(477, 532);
             this.pn_test.TabIndex = 11;
             // 
-<<<<<<< Updated upstream
             // ch_data
             // 
             this.ch_data.BackColor = System.Drawing.Color.Transparent;
@@ -381,87 +306,6 @@
             this.ch_data.Series.Add(series4);
             this.ch_data.Series.Add(series5);
             this.ch_data.Series.Add(series6);
-=======
-<<<<<<< Updated upstream
-            // lb_state
-            // 
-            this.lb_state.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_state.Location = new System.Drawing.Point(-2, 62);
-            this.lb_state.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lb_state.Name = "lb_state";
-            this.lb_state.Size = new System.Drawing.Size(479, 28);
-            this.lb_state.TabIndex = 2;
-            this.lb_state.Text = "state";
-            this.lb_state.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-=======
-            // lb_rpm_tip
-            // 
-            this.lb_rpm_tip.AutoSize = true;
-            this.lb_rpm_tip.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_rpm_tip.Location = new System.Drawing.Point(37, 341);
-            this.lb_rpm_tip.Name = "lb_rpm_tip";
-            this.lb_rpm_tip.Size = new System.Drawing.Size(274, 17);
-            this.lb_rpm_tip.TabIndex = 19;
-            this.lb_rpm_tip.Text = "Try keeping your RPM between 50 and 60";
-            this.lb_rpm_tip.Visible = false;
-            // 
-            // lb_actual_power
-            // 
-            this.lb_actual_power.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_actual_power.Location = new System.Drawing.Point(221, 480);
-            this.lb_actual_power.Name = "lb_actual_power";
-            this.lb_actual_power.Size = new System.Drawing.Size(100, 23);
-            this.lb_actual_power.TabIndex = 18;
-            this.lb_actual_power.Text = "0";
-            this.lb_actual_power.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(27, 480);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(89, 17);
-            this.label13.TabIndex = 17;
-            this.label13.Text = "Actual power";
-            // 
-            // lb_cycle_check
-            // 
-            this.lb_cycle_check.BackColor = System.Drawing.Color.Red;
-            this.lb_cycle_check.ForeColor = System.Drawing.Color.White;
-            this.lb_cycle_check.Location = new System.Drawing.Point(27, 318);
-            this.lb_cycle_check.Name = "lb_cycle_check";
-            this.lb_cycle_check.Size = new System.Drawing.Size(294, 23);
-            this.lb_cycle_check.TabIndex = 16;
-            this.lb_cycle_check.Text = "Cycle faster!";
-            this.lb_cycle_check.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // ch_data
-            // 
-            this.ch_data.BackColor = System.Drawing.Color.Transparent;
-            chartArea1.Name = "ChartArea1";
-            this.ch_data.ChartAreas.Add(chartArea1);
-            legend1.BackColor = System.Drawing.Color.Transparent;
-            legend1.Name = "Legend1";
-            this.ch_data.Legends.Add(legend1);
-            this.ch_data.Location = new System.Drawing.Point(0, 87);
-            this.ch_data.Name = "ch_data";
-            this.ch_data.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.Legend = "Legend1";
-            series1.Name = "Power";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.Legend = "Legend1";
-            series2.Name = "Heartrate";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series3.Legend = "Legend1";
-            series3.Name = "RPM";
-            this.ch_data.Series.Add(series1);
-            this.ch_data.Series.Add(series2);
-            this.ch_data.Series.Add(series3);
->>>>>>> Stashed changes
             this.ch_data.Size = new System.Drawing.Size(477, 212);
             this.ch_data.TabIndex = 14;
             this.ch_data.Text = "chart1";
@@ -484,10 +328,6 @@
             this.label10.Size = new System.Drawing.Size(116, 17);
             this.label10.TabIndex = 12;
             this.label10.Text = "Time left in state:";
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             // 
             // label6
             // 
@@ -558,7 +398,6 @@
             // 
             // label7
             // 
-<<<<<<< Updated upstream
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(27, 391);
             this.label7.Name = "label7";
@@ -568,17 +407,6 @@
             // 
             // lb_state
             // 
-=======
-<<<<<<< Updated upstream
-            this.lb_time.AutoSize = true;
-            this.lb_time.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lb_time.Location = new System.Drawing.Point(210, 133);
-            this.lb_time.Name = "lb_time";
-            this.lb_time.Size = new System.Drawing.Size(55, 20);
-            this.lb_time.TabIndex = 10;
-            this.lb_time.Text = "00:00";
-=======
->>>>>>> Stashed changes
             this.lb_state.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lb_state.Location = new System.Drawing.Point(174, 24);
             this.lb_state.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
@@ -587,7 +415,6 @@
             this.lb_state.TabIndex = 2;
             this.lb_state.Text = "state";
             this.lb_state.TextAlign = System.Drawing.ContentAlignment.TopRight;
-<<<<<<< Updated upstream
             // 
             // lb_cycle_check
             // 
@@ -655,9 +482,6 @@
             this.lb_rpm_tip.TabIndex = 19;
             this.lb_rpm_tip.Text = "Try keeping your RPM between 50 and 60";
             this.lb_rpm_tip.Visible = false;
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             // 
             // MainWindow
             // 
@@ -669,24 +493,16 @@
             this.Controls.Add(this.pn_patient);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainWindow";
-            this.Text = "th";
+            this.Text = "MainWindow";
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.pn_connect.ResumeLayout(false);
             this.pn_connect.PerformLayout();
             this.pn_patient.ResumeLayout(false);
             this.pn_patient.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nud_weight)).EndInit();
             this.pn_test.ResumeLayout(false);
             this.pn_test.PerformLayout();
-<<<<<<< Updated upstream
             ((System.ComponentModel.ISupportInitialize)(this.ch_data)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_weight)).EndInit();
-=======
-<<<<<<< Updated upstream
-=======
-            ((System.ComponentModel.ISupportInitialize)(this.ch_data)).EndInit();
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             this.ResumeLayout(false);
 
         }
