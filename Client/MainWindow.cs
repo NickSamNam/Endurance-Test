@@ -96,10 +96,10 @@ namespace Client
             MessageBox.Show(this, "You're about to participate in the VO2Max endurance test! \n\n" +
                 "Steps to take before starting the test: \n" +
                 "\t Get on the Kettler hometrainer \n" +
-                "\t Attach the heartrate meter to your ear \n" +
-                "\t press 'Ok' to start the test \n\n" +
-                "The test begins with 2 minutes of warmup were your ideal cycling power will be determined \n" +
-                "During the test the goal is to have a steady heartrate between 130 and 140 BPM \n" +
+                "\t Attach the heartrate sensor to your ear \n" +
+                "\t press 'OK' to start the test \n\n" +
+                "The test begins with 2 minutes of warmup where your ideal cycling power will be determined \n" +
+                "During the test the goal is to have a steady heartrate above 130 BPM \n" +
                 "Also make sure your RPM stays between 50 and 60", "Start the Test!");
 
             await StartTest(new Patient(
