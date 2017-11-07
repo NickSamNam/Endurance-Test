@@ -105,7 +105,7 @@ namespace Client
             await StartTest(new Patient(
                     tb_first_name.Text,
                     tb_last_name.Text,
-                    dtp_birthdate.MinDate,
+                    dtp_birthdate.Value.Date,
                     rb_gender_male.Checked,
                     (int)nud_weight.Value
                 )

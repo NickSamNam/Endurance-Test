@@ -175,7 +175,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(69, 17);
             this.label4.TabIndex = 10;
-            this.label4.Text = "Birth date";
+            this.label4.Text = "Birthdate";
             // 
             // dtp_birthdate
             // 
