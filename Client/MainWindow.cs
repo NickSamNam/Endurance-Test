@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO.Ports;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -25,6 +27,10 @@ namespace Client
             {
                 cb_ports.Items.Add(port);
             }
+
+            ch_data.Series["Power"].Points.Clear();
+            ch_data.Series["RPM"].Points.Clear();
+            ch_data.Series["Heartrate"].Points.Clear();
         }
 
         /// <summary>
@@ -87,12 +93,21 @@ namespace Client
             pn_patient.Visible = false;
             pn_test.Visible = true;
 
+            MessageBox.Show(this, "You're about to participate in the VO2Max endurance test! \n\n" +
+                "Steps to take before starting the test: \n" +
+                "\t Get on the Kettler hometrainer \n" +
+                "\t Attach the heartrate meter to your ear \n" +
+                "\t press 'Ok' to start the test \n\n" +
+                "The test begins with 2 minutes of warmup were your ideal cycling power will be determined \n" +
+                "During the test the goal is to have a steady heartrate between 130 and 140 BPM \n" +
+                "Also make sure your RPM stays between 50 and 60", "Start the Test!");
+
             await StartTest(new Patient(
                     tb_first_name.Text,
                     tb_last_name.Text,
                     dtp_birthdate.MinDate,
-                    rb_gender_male.Checked,
-                    60
+                    (int)nud_weight.Value,
+                    rb_gender_male.Checked
                 )
             );
         }
@@ -138,17 +153,27 @@ namespace Client
             }
         }
 
-        public void OnStateChanged(string state)
+        public void OnStateChanged(string state, int time)
         {
             lb_state.Invoke(new Action(() => lb_state.Text = state));
-
+            StartTimer(TimeSpan.FromMilliseconds(time));
             if (state == "NO")
             {
                 lb_state.Invoke(new Action(() => lb_state.Text = "Test is done!"));
             }
         }
 
-        public void OnErgometerDataReceived(int rpm, int hr, int power, TimeSpan time)
+        private void StartTimer(TimeSpan time) {
+            new Thread(() => {
+                while (time.TotalSeconds > 0) {
+                    time.Subtract(TimeSpan.FromSeconds(1));
+                    lb_time_left.Invoke(new Action(() => lb_time_left.Text = time.ToString(@"mm\:ss")));
+                    Thread.Sleep(1000);
+                }
+            }).Start();
+        }
+
+        public void OnErgometerDataReceived(int rpm, int hr, int power, int actualpower, TimeSpan time)
         {
             this.Invoke(new MethodInvoker(() =>
             {
@@ -156,7 +181,38 @@ namespace Client
                 lb_hr.Text = hr.ToString();
                 lb_power.Text = power.ToString();
                 lb_time.Text = time.ToString(@"mm\:ss");
+                lb_actual_power.Text = actualpower.ToString();
+
+                UpdateCycleCheck(rpm);
+                AddToChart(rpm,hr,power,time);
             }));
+        }
+
+        private void UpdateCycleCheck(int rpm) {
+            if (rpm < 50)
+            {
+                lb_cycle_check.Text = "Cycle faster!";
+                lb_cycle_check.BackColor = Color.Red;
+                lb_rpm_tip.Visible = true;
+            }
+            else if (rpm > 60)
+            {
+                lb_cycle_check.Text = "Cycle slower!";
+                lb_cycle_check.BackColor = Color.Red;
+                lb_rpm_tip.Visible = true;
+            }
+            else
+            {
+                lb_cycle_check.Text = "Perfect cycle speed!";
+                lb_cycle_check.BackColor = Color.LawnGreen;
+                lb_rpm_tip.Visible = false;
+            }
+        }
+
+        private void AddToChart(int rpm, int hr, int power, TimeSpan time) {
+            ch_data.Series["Power"].Points.AddXY(time.ToString(), power);
+            ch_data.Series["Heartrate"].Points.AddXY(time.ToString(), hr);
+            ch_data.Series["RPM"].Points.AddXY(time.ToString(), rpm);
         }
     }
 }
