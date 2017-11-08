@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
@@ -20,7 +21,7 @@ namespace Client
         {
             lb_name_gender.Text = $"{_log.EnduranceTest.Patient.LastName}, {_log.EnduranceTest.Patient.FirstName}";
             lb_dob_age.Text = $"{_log.EnduranceTest.Patient.BirthDate}";
-            lb_vo2max.Text = $"{_log.EnduranceTest.TestResults.VO2Max}";
+            lb_vo2max.Text = $"{Math.Round((double) _log.EnduranceTest.TestResults.VO2MaxAbsolute, 2)}";
 
             var length = _log.EnduranceTest.ErgometerLog.Count;
             var hrs = new int[length];
