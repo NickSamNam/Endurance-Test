@@ -21,7 +21,10 @@ namespace Client
         {
             lb_name_gender.Text = $"{_log.EnduranceTest.Patient.LastName}, {_log.EnduranceTest.Patient.FirstName}";
             lb_dob_age.Text = $"{_log.EnduranceTest.Patient.BirthDate}";
-            lb_vo2max.Text = $"{Math.Round((double) _log.EnduranceTest.TestResults.VO2MaxAbsolute, 2)}";
+            lb_absvo2max.Text = $"{Math.Round((double) _log.EnduranceTest.TestResults.VO2MaxAbsolute, 2)}";
+            lb_relvo2max.Text = $"{Math.Round((double)_log.EnduranceTest.TestResults.VO2MaxRelative, 2)}";
+            lb_hr.Text = $"{_log.EnduranceTest.TestResults.HR}";
+            lb_test_power.Text = $"{_log.EnduranceTest.TestResults.Power}";
 
             var length = _log.EnduranceTest.ErgometerLog.Count;
             var hrs = new int[length];
