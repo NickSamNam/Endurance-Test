@@ -260,22 +260,22 @@ namespace Server
 					""required"":true,
 					""properties"":{
 						""VO2MaxAbsolute"": {
-							""type"":""number"",
+							""type"":[""number"", ""null""],
 							""id"": ""http://jsonschema.net/EnduranceTest/TestResults/VO2MaxAbsolute"",
 							""required"":true
 						},
                         ""VO2MaxRelative"": {
-							""type"":""number"",
+							""type"":[""number"", ""null""],
 							""id"": ""http://jsonschema.net/EnduranceTest/TestResults/VO2MaxRelative"",
 							""required"":true
 						},
                         ""Power"": {
-							""type"":""number"",
+							""type"":[""number"", ""null""],
 							""id"": ""http://jsonschema.net/EnduranceTest/TestResults/Power"",
 							""required"":true
 						},
                         ""HR"": {
-							""type"":""number"",
+							""type"":[""number"", ""null""],
 							""id"": ""http://jsonschema.net/EnduranceTest/TestResults/HR"",
 							""required"":true
 						}

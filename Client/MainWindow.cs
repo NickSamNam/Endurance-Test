@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -105,7 +106,7 @@ namespace Client
             await StartTest(new Patient(
                     tb_first_name.Text,
                     tb_last_name.Text,
-                    dtp_birthdate.MinDate,
+                    dtp_birthdate.Value.Date,
                     rb_gender_male.Checked,
                     (int)nud_weight.Value
                 )
@@ -209,7 +210,9 @@ namespace Client
             }
         }
 
-        private void AddToChart(int rpm, int hr, int power, TimeSpan time) {
+        private void AddToChart(int rpm, int hr, int power, TimeSpan time)
+        {
+            if (Math.Abs(time.TotalSeconds % 5) > 0.1) return;
             ch_data.Series["Power"].Points.AddXY(time.ToString(), power);
             ch_data.Series["Heartrate"].Points.AddXY(time.ToString(), hr);
             ch_data.Series["RPM"].Points.AddXY(time.ToString(), rpm);

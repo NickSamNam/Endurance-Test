@@ -168,16 +168,12 @@ namespace Client
                 new Thread(() => MessageBox.Show("Heartrate too irregular.", "Test failed.")).Start();
             }
             var ergometerLog = _ergometer.Log;
-            double vO2MaxAbs;
-            double vO2MaxRel;
+            double? vO2MaxAbs = null;
+            double? vO2MaxRel = null;
             if (testPower != null && ssHR != null)
             {
                 vO2MaxAbs = Nomogram.CalcVO2MaxAbsolute(_patient, (int) testPower, (int) ssHR);
-                vO2MaxRel = Nomogram.CalcVO2MaxRelative(_patient, vO2MaxAbs);
-            }
-            else
-            {
-                vO2MaxAbs = vO2MaxRel = double.NaN;
+                vO2MaxRel = Nomogram.CalcVO2MaxRelative(_patient, (double) vO2MaxAbs);
             }
             return new JObject
             {
