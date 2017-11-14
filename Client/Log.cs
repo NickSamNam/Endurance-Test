@@ -21,14 +21,21 @@ namespace Client
         {
             lb_name_gender.Text = $"{_log.EnduranceTest.Patient.LastName}, {_log.EnduranceTest.Patient.FirstName}";
             lb_dob_age.Text = $"{_log.EnduranceTest.Patient.BirthDate}";
-            lb_absvo2max.Text = $"{Math.Round((double) _log.EnduranceTest.TestResults.VO2MaxAbsolute, 2)}";
-            lb_relvo2max.Text = $"{Math.Round((double)_log.EnduranceTest.TestResults.VO2MaxRelative, 2)}";
-            lb_hr.Text = $"{_log.EnduranceTest.TestResults.HR}";
-            lb_test_power.Text = $"{_log.EnduranceTest.TestResults.Power}";
+            if (_log.EnduranceTest.TestResults.VO2MaxAbsolute != null)
+            {
+                lb_absvo2max.Text = $"{Math.Round((double) _log.EnduranceTest.TestResults.VO2MaxAbsolute, 2)}";
+                lb_relvo2max.Text = $"{Math.Round((double) _log.EnduranceTest.TestResults.VO2MaxRelative, 2)}";
+            }
 
-            lb_steady.Text = $"Yes";
-            if (_log.EnduranceTest.TestResults.HR == null)
-                lb_steady.Text = $"No";
+            if (_log.EnduranceTest.TestResults.Power != null)
+                lb_test_power.Text = $"{_log.EnduranceTest.TestResults.Power}";
+
+            if (_log.EnduranceTest.TestResults.HR != null)
+            {
+                lb_hr.Text = $"{_log.EnduranceTest.TestResults.HR}";
+                lb_steady.Text = $"Yes";
+            }
+
 
             var length = _log.EnduranceTest.ErgometerLog.Count;
             var hrs = new int[length];
@@ -36,7 +43,8 @@ namespace Client
             var rpm = new int[length];
             var speed = new double[length];
 
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i < length; i++)
+            {
                 var line = _log.EnduranceTest.ErgometerLog[i];
                 hrs[i] = line.HR ?? 0;
                 power[i] = line.ActualPower ?? 0;
@@ -52,7 +60,7 @@ namespace Client
 
         private void FillChart(Chart chart, int[] data)
         {
-            FillChart(chart, data.Select(x => (double)x).ToArray());
+            FillChart(chart, data.Select(x => (double) x).ToArray());
         }
 
         private void FillChart(Chart chart, double[] data)
@@ -60,7 +68,7 @@ namespace Client
             var i = 0;
             foreach (double d in data)
             {
-                chart.Series["Series1"].Points.AddXY(i,d);
+                chart.Series["Series1"].Points.AddXY(i, d);
                 i++;
             }
         }
