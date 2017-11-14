@@ -165,9 +165,10 @@ namespace Client
         }
 
         private void StartTimer(TimeSpan time) {
+            lb_time_left.Invoke(new Action(() => lb_time_left.Text = time.ToString(@"mm\:ss")));
             new Thread(() => {
                 while (time.TotalSeconds > 0) {
-                    time.Subtract(TimeSpan.FromSeconds(1));
+                    time = time.Subtract(TimeSpan.FromSeconds(1));
                     lb_time_left.Invoke(new Action(() => lb_time_left.Text = time.ToString(@"mm\:ss")));
                     Thread.Sleep(1000);
                 }
