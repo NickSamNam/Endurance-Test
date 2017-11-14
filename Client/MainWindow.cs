@@ -18,6 +18,7 @@ namespace Client
         public MainWindow()
         {
             InitializeComponent();
+            FormClosing += (o, i) => Environment.Exit(0);
         }
 
         private void MainWindow_Load(object sender, System.EventArgs e)

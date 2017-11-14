@@ -27,7 +27,7 @@ namespace Client
             lb_test_power.Text = $"{_log.EnduranceTest.TestResults.Power}";
 
             lb_steady.Text = $"Yes";
-            if (_log.EnduranceTest.TestResults.VO2MaxAbsolute == null)
+            if (_log.EnduranceTest.TestResults.HR == null)
                 lb_steady.Text = $"No";
 
             var length = _log.EnduranceTest.ErgometerLog.Count;
